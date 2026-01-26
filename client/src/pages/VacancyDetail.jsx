@@ -47,11 +47,39 @@ const VacancyDetail = () => {
         ? vacancy.requisitos.split('-').filter(req => req.trim().length > 0)
         : [];
 
+    const getRelativeTime = (dateString) => {
+        if (!dateString) return '';
+        const parts = dateString.split('/');
+        if (parts.length !== 3) return `Publicado el ${dateString}`;
+
+        const day = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1;
+        const year = parseInt(parts[2], 10);
+
+        const pubDate = new Date(year, month, day);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        pubDate.setHours(0, 0, 0, 0);
+
+        const diffTime = today - pubDate;
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 0) return 'Publicado hoy';
+        if (diffDays === 1) return 'Publicado hace 1 día';
+        return `Publicado hace ${diffDays} días`;
+    };
+
     return (
         <div className="min-h-screen bg-gray-50 pb-12">
             {/* Header separate from navbar designed to match the request */}
-            <div className="bg-primary text-white py-12 shadow-lg">
-                <div className="container mx-auto px-4">
+            <div
+                className="relative bg-primary text-white pt-24 pb-32 shadow-lg bg-cover bg-center"
+                style={{ backgroundImage: "url('/images/general/vacante.png')" }}
+            >
+                {/* Overlay */}
+                <div className="absolute inset-0 bg-black/60 z-0"></div>
+
+                <div className="container mx-auto px-4 relative z-10">
                     <Link to="/unete-al-equipo" className="inline-flex items-center text-white/80 hover:text-white mb-6 transition-colors font-medium">
                         <ArrowLeft size={18} className="mr-2" /> Volver a la lista
                     </Link>
@@ -61,11 +89,11 @@ const VacancyDetail = () => {
                             {vacancy.area}
                         </span>
                         <span className="flex items-center text-white/80 text-sm">
-                            <Calendar size={14} className="mr-1" /> Publicado hace {vacancy.fecha_publicacion}
+                            <Calendar size={14} className="mr-1" /> {getRelativeTime(vacancy.fecha_publicacion)}
                         </span>
                     </div>
 
-                    <h1 className="text-3xl md:text-5xl font-bold mb-6 leading-tight">
+                    <h1 className="text-3xl md:text-5xl font-bold mb-6 leading-tight text-white drop-shadow-md">
                         {vacancy.nombre_vacante}
                     </h1>
 
@@ -82,8 +110,8 @@ const VacancyDetail = () => {
                 </div>
             </div>
 
-            <div className="container mx-auto px-4 -mt-8">
-                <div className="bg-white rounded-xl shadow-lg p-6 md:p-10 max-w-4xl mx-auto border border-gray-100">
+            <div className="container mx-auto px-4 -mt-24 relative z-20">
+                <div className="bg-white rounded-xl shadow-2xl p-6 md:p-10 max-w-4xl mx-auto border border-gray-100">
 
                     <div className="mb-10">
                         <h3 className="text-xl font-bold text-gray-900 mb-4 border-b pb-2">Descripción del Puesto</h3>

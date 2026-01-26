@@ -208,15 +208,25 @@ const ProductDetail = () => {
                     </div>
 
                     {/* Free Services */}
-                    <div className="bg-gray-100 p-4 rounded-lg mb-6 border-l-4 border-accent">
-                        <p className="font-bold text-dark mb-2">En la compra de 2 llantas o más incluye gratis:</p>
-                        <ul className="grid grid-cols-2 gap-2 text-sm text-gray-700">
-                            <li className="flex items-center"><CheckCircle size={14} className="text-accent mr-1" /> Instalación</li>
-                            <li className="flex items-center"><CheckCircle size={14} className="text-accent mr-1" /> Balanceo</li>
-                            <li className="flex items-center"><CheckCircle size={14} className="text-accent mr-1" /> Válvula</li>
-                            <li className="flex items-center"><CheckCircle size={14} className="text-accent mr-1" /> Aire o Nitrógeno</li>
-                        </ul>
-                    </div>
+                    {product.category === 'Llantas' && (
+                        <div className="bg-gray-100 p-4 rounded-lg mb-6 border-l-4 border-accent">
+                            <p className="font-bold text-dark mb-2">En la compra de 2 llantas o más incluye gratis:</p>
+                            <ul className="grid grid-cols-2 gap-2 text-sm text-gray-700">
+                                <li className="flex items-center"><CheckCircle size={14} className="text-accent mr-1" /> Instalación</li>
+                                <li className="flex items-center"><CheckCircle size={14} className="text-accent mr-1" /> Balanceo</li>
+                                <li className="flex items-center"><CheckCircle size={14} className="text-accent mr-1" /> Válvula</li>
+                                <li className="flex items-center"><CheckCircle size={14} className="text-accent mr-1" /> Aire o Nitrógeno</li>
+                            </ul>
+                        </div>
+                    )}
+                    {product.category === 'Rines' && (
+                        <div className="bg-gray-100 p-4 rounded-lg mb-6 border-l-4 border-accent">
+                            <p className="font-bold text-dark flex items-center">
+                                <CheckCircle size={18} className="text-accent mr-2" />
+                                Instalación Gratis
+                            </p>
+                        </div>
+                    )}
 
                     {/* Description */}
                     <div className="mb-6">
