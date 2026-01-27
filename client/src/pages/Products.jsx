@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import ProductCard from '../components/ProductCard';
 import { Search, Tag, Wrench, Disc, Share2, Maximize2, Minimize2 } from 'lucide-react';
 
@@ -40,7 +40,7 @@ const Products = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await axios.get('http://localhost:3001/api/products');
+                const response = await api.get('/products');
                 const allProducts = response.data;
                 setProducts(allProducts);
                 setFilteredProducts(allProducts);

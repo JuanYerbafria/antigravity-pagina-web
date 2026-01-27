@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Clock, ArrowRight, Briefcase, Users } from 'lucide-react';
 
+import api from '../utils/api';
+
 const Vacancies = () => {
     const [vacancies, setVacancies] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -10,12 +12,8 @@ const Vacancies = () => {
     useEffect(() => {
         const fetchVacancies = async () => {
             try {
-                const response = await fetch('/api/vacancies');
-                if (!response.ok) {
-                    throw new Error('Error al cargar vacantes');
-                }
-                const data = await response.json();
-                setVacancies(data);
+                const response = await api.get('/vacancies');
+                setVacancies(response.data);
             } catch (err) {
                 console.error(err);
                 setError(err.message);

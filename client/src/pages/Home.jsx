@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, CheckCircle, Star, Shield, Award, Wrench } from 'lucide-react';
-import axios from 'axios';
+import api from '../utils/api';
 import ProductCard from '../components/ProductCard';
 import TireSearch from '../components/TireSearch';
 
@@ -12,7 +12,7 @@ const Home = () => {
         // Fetch featured products
         const fetchProducts = async () => {
             try {
-                const response = await axios.get('http://localhost:3001/api/products?featured=true');
+                const response = await api.get('/products?featured=true');
                 setFeaturedProducts(response.data);
             } catch (error) {
                 console.error('Error fetching featured products:', error);

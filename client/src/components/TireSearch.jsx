@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Tag, Wrench, ArrowUpDown } from 'lucide-react';
-import axios from 'axios';
+import api from '../utils/api';
 
 const TireSearch = () => {
     const [activeTab, setActiveTab] = useState('auto');
@@ -49,7 +49,7 @@ const TireSearch = () => {
             if (searchParams.perfil) params.append('perfil', searchParams.perfil);
             if (searchParams.rin) params.append('rin', searchParams.rin);
 
-            const response = await axios.get(`http://localhost:3001/api/inventory/search?${params.toString()}`);
+            const response = await api.get(`/inventory/search?${params.toString()}`);
 
             if (response.data.success) {
                 setResults(response.data.data);

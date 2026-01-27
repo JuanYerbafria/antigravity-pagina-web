@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
 
 const Contact = () => {
@@ -19,7 +19,7 @@ const Contact = () => {
         e.preventDefault();
         setStatus('sending');
         try {
-            await axios.post('http://localhost:3001/api/contact', formData);
+            await api.post('/contact', formData);
             setStatus('success');
             setFormData({ name: '', email: '', phone: '', message: '' });
         } catch (error) {

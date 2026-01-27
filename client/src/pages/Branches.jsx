@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { MapPin, Phone, Navigation } from 'lucide-react';
 
 const Branches = () => {
@@ -8,7 +8,7 @@ const Branches = () => {
     useEffect(() => {
         const fetchBranches = async () => {
             try {
-                const response = await axios.get('http://localhost:3001/api/branches');
+                const response = await api.get('/branches');
                 setBranches(response.data);
             } catch (error) {
                 console.error('Error fetching branches:', error);

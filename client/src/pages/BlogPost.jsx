@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/api';
 import { Calendar, User, ArrowLeft } from 'lucide-react';
 
 const BlogPost = () => {
@@ -11,7 +11,7 @@ const BlogPost = () => {
     useEffect(() => {
         const fetchPost = async () => {
             try {
-                const response = await axios.get(`http://localhost:3001/api/blog/${id}`);
+                const response = await api.get(`/blog/${id}`);
                 setPost(response.data);
                 setLoading(false);
             } catch (error) {

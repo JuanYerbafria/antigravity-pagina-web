@@ -1,4 +1,3 @@
-const db = require('../db');
 const nodemailer = require('nodemailer');
 
 exports.submitContact = async (req, res) => {
@@ -8,12 +7,6 @@ exports.submitContact = async (req, res) => {
         if (!name || !email || !message) {
             return res.status(400).json({ message: 'Faltan campos obligatorios' });
         }
-
-        // Save to database
-        await db.query(
-            'INSERT INTO contact_messages (name, email, phone, message) VALUES (?, ?, ?, ?)',
-            [name, email, phone, message]
-        );
 
         // Send email
         const transporter = nodemailer.createTransport({

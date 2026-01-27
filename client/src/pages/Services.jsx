@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { Wrench } from 'lucide-react';
 
 const Services = () => {
@@ -8,7 +8,7 @@ const Services = () => {
     useEffect(() => {
         const fetchServices = async () => {
             try {
-                const response = await axios.get('http://localhost:3001/api/services');
+                const response = await api.get('/services');
                 setServices(response.data);
             } catch (error) {
                 console.error('Error fetching services:', error);
