@@ -111,4 +111,27 @@ Para que `gruponoguez.com` entre al VPS.
 
 ---
 
+## Parte 6: Solución Error 404 (Rutas de React)
+
+Si al entrar a `/contacto` o `/productos` te sale error 404, es porque el servidor busca una carpeta y no la encuentra. Debemos forzar que todo vaya al `index.html`.
+
+1.  Entrar al panel **OpenLiteSpeed** (`https://TU_IP:7080`).
+2.  Ir a **Virtual Hosts** -> **Example** (o tu dominio).
+3.  Pestaña **Rewrite**.
+4.  Asegurarse de:
+    *   Enable Rewrite: **Yes**
+    *   Auto Load from .htaccess: **Yes**
+5.  **IMPORTANTE**: En la sección **Rewrite Rules**, darle a **Editar** y pegar esto:
+    ```apache
+    RewriteBase /
+    RewriteRule ^index\.html$ - [L]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . /index.html [L]
+    ```
+6.  Guardar y **Reiniciar** (Graceful Restart).
+
+---
+
 ¡Listo! Con estos pasos tu sitio queda 100% funcional.
+
