@@ -74,7 +74,7 @@ const VacancyDetail = () => {
             {/* Header separate from navbar designed to match the request */}
             <div
                 className="relative bg-primary text-white pt-24 pb-32 shadow-lg bg-cover bg-center"
-                style={{ backgroundImage: "url('/images/general/vacante.png')" }}
+                style={{ backgroundImage: "url('/images/general/vacante.webp')" }}
             >
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-black/60 z-0"></div>

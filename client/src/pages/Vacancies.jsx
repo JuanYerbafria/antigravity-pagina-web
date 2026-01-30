@@ -41,7 +41,7 @@ const Vacancies = () => {
         <div className="min-h-screen bg-gray-50 pb-12">
             {/* Header */}
             {/* Header */}
-            <div className="bg-cover bg-center bg-fixed text-white py-24 mb-12 relative overflow-hidden" style={{ backgroundImage: "url('/images/general/fondovacante.png')" }}>
+            <div className="bg-cover bg-center bg-fixed text-white py-24 mb-12 relative overflow-hidden" style={{ backgroundImage: "url('/images/general/fondovacante.webp')" }}>
                 <div className="absolute inset-0 bg-black/70 z-0"></div>
                 {/* Decorative circles */}
                 <div className="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl z-0"></div>

@@ -28,19 +28,21 @@ const Services = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {services.map(service => {
                     const lowerName = service.name.toLowerCase();
-                    let imageSrc = null;
+                    let imageSrc = service.icon_url || null;
 
-                    if (lowerName.includes('alineaci')) imageSrc = '/images/servicios/alineacion.png';
-                    else if (lowerName.includes('balanceo')) imageSrc = '/images/servicios/balanceo.png';
-                    else if (lowerName.includes('bater')) imageSrc = '/images/servicios/bateria.png';
-                    else if (lowerName.includes('rotaci')) imageSrc = '/images/servicios/rotacion.png';
-                    else if (lowerName.includes('vulcanizadora movil') || lowerName.includes('móvil')) imageSrc = '/images/servicios/vulcanizadora_movil.png';
-                    else if (lowerName.includes('vulcanizadora')) imageSrc = '/images/servicios/vulcanizadora.png';
-                    else if (lowerName.includes('rin')) imageSrc = '/images/servicios/reparacion_de_rin.png';
-                    else if (lowerName.includes('nitrogeno') || lowerName.includes('nitrógeno')) imageSrc = '/images/servicios/llenado_de_nitrogeno.png';
-                    else if (lowerName.includes('seccionado')) imageSrc = '/images/servicios/seccionado_llanta.png';
-                    else if (lowerName.includes('escaneo')) imageSrc = '/images/servicios/escaneo.png';
-                    else if (lowerName.includes('frenos')) imageSrc = '/images/servicios/frenos.png';
+                    if (!imageSrc) {
+                        if (lowerName.includes('alineaci')) imageSrc = '/images/servicios/alineacion.png';
+                        else if (lowerName.includes('balanceo')) imageSrc = '/images/servicios/balanceo.png';
+                        else if (lowerName.includes('bater')) imageSrc = '/images/servicios/bateria.png';
+                        else if (lowerName.includes('rotaci')) imageSrc = '/images/servicios/rotacion.png';
+                        else if (lowerName.includes('vulcanizadora movil') || lowerName.includes('móvil')) imageSrc = '/images/servicios/vulcanizadora_movil.png';
+                        else if (lowerName.includes('vulcanizadora')) imageSrc = '/images/servicios/vulcanizadora.png';
+                        else if (lowerName.includes('rin')) imageSrc = '/images/servicios/reparacion_de_rin.png';
+                        else if (lowerName.includes('nitrogeno') || lowerName.includes('nitrógeno')) imageSrc = '/images/servicios/llenado_de_nitrogeno.png';
+                        else if (lowerName.includes('seccionado')) imageSrc = '/images/servicios/seccionado_llanta.png';
+                        else if (lowerName.includes('escaneo')) imageSrc = '/images/servicios/escaneo.png';
+                        else if (lowerName.includes('frenos')) imageSrc = '/images/servicios/frenos.png';
+                    }
 
                     return (
                         <div key={service.id} className="bg-white p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow border-t-4 border-accent">

@@ -29,7 +29,7 @@ const Home = () => {
                 {/* Background Image with Overlay */}
                 <div className="absolute inset-0">
                     <img
-                        src="/images/general/header.png"
+                        src="/images/general/header.webp"
                         alt="Background"
                         className="w-full h-full object-cover opacity-60"
                     />
@@ -172,32 +172,32 @@ const Home = () => {
                         {/* First set of logos */}
                         <div className="flex space-x-12 px-6">
                             {[
-                                { name: 'Hankook', src: '/images/general/Hankook.png' },
-                                { name: 'Pirelli', src: '/images/general/pirelli.png' },
-                                { name: 'Michelin', src: '/images/general/michelin_tire.png' },
-                                { name: 'Kumho', src: '/images/general/kumho_tire.png' },
-                                { name: 'Bridgestone', src: '/images/general/Bridgestone.png' },
-                                { name: 'Tornel', src: '/images/general/tornel.png' },
-                                { name: 'Continental', src: '/images/general/continental.png' },
-                                { name: 'Cooper', src: '/images/general/cooper.png' },
-                                { name: 'Mirage', src: '/images/general/Mirage.png' },
-                                { name: 'Blackhawk', src: '/images/general/black.jpeg' },
-                                { name: 'Toyo', src: '/images/general/toyo.png' },
-                                { name: 'Bf Goodrich', src: '/images/general/bf_goodrich.png' },
-                                { name: 'Yokohama', src: '/images/general/yoko.png' },
-                                { name: 'Dunlop', src: '/images/general/dunlop.png' },
-                                { name: 'Euzkadi', src: '/images/general/euzcadi.png' },
-                                { name: 'Firestone', src: '/images/general/firestone.png' },
-                                { name: 'Goodride', src: '/images/general/goodride.png' },
-                                { name: 'Goodyear', src: '/images/general/goodyear.png' },
-                                { name: 'Jktires', src: '/images/general/jktire.png' },
-                                { name: 'Laufen', src: '/images/general/laufen.png' },
-                                { name: 'Maxtrek', src: '/images/general/maxtrickpng.png' },
-                                { name: 'Maxxis', src: '/images/general/maxxis.png' },
-                                { name: 'Mazzini', src: '/images/general/mazzini.png' },
-                                { name: 'Uniroyal', src: '/images/general/uni.png' },
-                                { name: 'Wanli', src: '/images/general/wanli.png' },
-                                { name: 'Winrun', src: '/images/general/win.png' }
+                                { name: 'Hankook', src: '/images/general/Hankook.webp' },
+                                { name: 'Pirelli', src: '/images/general/pirelli.webp' },
+                                { name: 'Michelin', src: '/images/general/michelin_tire.webp' },
+                                { name: 'Kumho', src: '/images/general/kumho_tire.webp' },
+                                { name: 'Bridgestone', src: '/images/general/Bridgestone.webp' },
+                                { name: 'Tornel', src: '/images/general/tornel.webp' },
+                                { name: 'Continental', src: '/images/general/continental.webp' },
+                                { name: 'Cooper', src: '/images/general/cooper.webp' },
+                                { name: 'Mirage', src: '/images/general/Mirage.webp' },
+                                { name: 'Blackhawk', src: '/images/general/black.webp' },
+                                { name: 'Toyo', src: '/images/general/toyo.webp' },
+                                { name: 'Bf Goodrich', src: '/images/general/bf_goodrich.webp' },
+                                { name: 'Yokohama', src: '/images/general/yoko.webp' },
+                                { name: 'Dunlop', src: '/images/general/dunlop.webp' },
+                                { name: 'Euzkadi', src: '/images/general/euzcadi.webp' },
+                                { name: 'Firestone', src: '/images/general/firestone.webp' },
+                                { name: 'Goodride', src: '/images/general/goodride.webp' },
+                                { name: 'Goodyear', src: '/images/general/goodyear.webp' },
+                                { name: 'Jktires', src: '/images/general/jktire.webp' },
+                                { name: 'Laufen', src: '/images/general/laufen.webp' },
+                                { name: 'Maxtrek', src: '/images/general/maxtrickpng.webp' },
+                                { name: 'Maxxis', src: '/images/general/maxxis.webp' },
+                                { name: 'Mazzini', src: '/images/general/mazzini.webp' },
+                                { name: 'Uniroyal', src: '/images/general/uni.webp' },
+                                { name: 'Wanli', src: '/images/general/wanli.webp' },
+                                { name: 'Winrun', src: '/images/general/win.webp' }
                             ].map((brand, index) => (
                                 <div key={`brand-1-${index}`} className="flex items-center justify-center w-32 h-20 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100">
                                     <img
@@ -211,19 +211,19 @@ const Home = () => {
                         {/* Duplicate set for seamless scrolling */}
                         <div className="flex space-x-12 px-6">
                             {[
-                                { name: 'Hankook', src: '/images/general/Hankook.png' },
-                                { name: 'Pirelli', src: '/images/general/pirelli.png' },
-                                { name: 'Michelin', src: '/images/general/michelin_tire.png' },
-                                { name: 'Kumho', src: '/images/general/kumho_tire.png' },
-                                { name: 'Bridgestone', src: '/images/general/Bridgestone.png' },
-                                { name: 'Tornel', src: '/images/general/tornel.png' },
+                                { name: 'Hankook', src: '/images/general/Hankook.webp' },
+                                { name: 'Pirelli', src: '/images/general/pirelli.webp' },
+                                { name: 'Michelin', src: '/images/general/michelin_tire.webp' },
+                                { name: 'Kumho', src: '/images/general/kumho_tire.webp' },
+                                { name: 'Bridgestone', src: '/images/general/Bridgestone.webp' },
+                                { name: 'Tornel', src: '/images/general/tornel.webp' },
                                 { name: 'Sportrack', src: null },
                                 { name: 'Davanti', src: null },
-                                { name: 'Mirage', src: '/images/general/Mirage.png' },
-                                { name: 'Blackhawk', src: '/images/general/black.jpeg' },
-                                { name: 'Toyo', src: '/images/general/toyo.png' },
+                                { name: 'Mirage', src: '/images/general/Mirage.webp' },
+                                { name: 'Blackhawk', src: '/images/general/black.webp' },
+                                { name: 'Toyo', src: '/images/general/toyo.webp' },
                                 { name: 'Nereus', src: null },
-                                { name: 'Yokohama', src: '/images/general/yoko.png' }
+                                { name: 'Yokohama', src: '/images/general/yoko.webp' }
                             ].map((brand, index) => (
                                 <div key={`brand-2-${index}`} className="flex items-center justify-center w-32 h-20 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100">
                                     <img

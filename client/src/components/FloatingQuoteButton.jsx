@@ -23,7 +23,7 @@ const FloatingQuoteButton = () => {
         >
             <div className="relative">
                 <img
-                    src="/images/logo/noguezin.png"
+                    src="/images/logo/noguezin.webp"
                     alt="Cotiza aquí"
                     className="w-24 h-24 object-contain drop-shadow-xl"
                 />

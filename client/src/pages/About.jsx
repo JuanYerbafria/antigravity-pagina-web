@@ -1,4 +1,4 @@
-import historyBg from '../assets/history-bg.png';
+import historyBg from '../assets/history-bg.webp';
 import { Target, Award } from 'lucide-react';
 
 
