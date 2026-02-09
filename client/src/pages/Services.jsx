@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../utils/api';
 import { Wrench } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 const Services = () => {
     const [services, setServices] = useState([]);
@@ -20,6 +21,10 @@ const Services = () => {
 
     return (
         <div className="container mx-auto px-4 py-12">
+            <Helmet>
+                <title>Servicios Mecánicos | Alineación, Balanceo y Más | Grupo Noguez</title>
+                <meta name="description" content="Ofrecemos servicios de alineación, balanceo, frenos, suspensión y más en Querétaro. Contamos con tecnología de punta y técnicos expertos." />
+            </Helmet>
             <h1 className="text-4xl font-bold text-center mb-4 text-primary">Nuestros Servicios</h1>
             <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
                 Contamos con el equipo más moderno y personal capacitado para brindarle el mejor mantenimiento a tu vehículo.

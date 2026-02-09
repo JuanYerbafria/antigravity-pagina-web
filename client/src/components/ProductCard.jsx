@@ -20,6 +20,8 @@ const ProductCard = ({ product }) => {
                         src={product.image_url}
                         alt={product.name}
                         className={`w-full h-full object-contain transition-transform duration-300 hover:scale-110 ${product.stock === 0 ? 'opacity-50 grayscale' : ''}`}
+                        width="400"
+                        height="400"
                     />
                 ) : (
                     <div className="text-gray-400 text-center">

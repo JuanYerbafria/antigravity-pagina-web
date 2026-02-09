@@ -1,8 +1,6 @@
 import historyBg from '../assets/history-bg.webp';
 import { Target, Award } from 'lucide-react';
-
-
-
+import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 
 const About = () => {
@@ -31,6 +29,10 @@ const About = () => {
     }, []);
     return (
         <div className="w-full">
+            <Helmet>
+                <title>Nuestra Historia | Grupo Llantero Noguez | Más de 6 Años</title>
+                <meta name="description" content="Conoce la historia de Grupo Llantero Noguez, una empresa familiar mexicana dedicada a la seguridad y confianza de los conductores en Querétaro desde 2019." />
+            </Helmet>
             {/* Hero Section - Nuestra Historia */}
             <div className="relative w-full min-h-[90vh] flex items-center justify-center bg-cover bg-center bg-no-repeat bg-fixed" style={{ backgroundImage: `url(${historyBg})` }}>
                 {/* Dark Overlay */}

@@ -1,5 +1,5 @@
-import React from 'react';
 import { useLocation } from 'react-router-dom';
+import { MessageCircle } from 'lucide-react';
 
 const FloatingQuoteButton = () => {
     const location = useLocation();
@@ -31,8 +31,12 @@ const FloatingQuoteButton = () => {
                     ¡Cotiza!
                 </div>
             </div>
-            <span className="bg-primary text-white text-sm font-bold px-3 py-1 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 absolute right-full mr-3 whitespace-nowrap">
-                Cotiza aquí
+            <span className="bg-primary text-white text-sm font-bold px-4 py-2 rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 absolute right-full mr-3 flex flex-col items-center gap-1 whitespace-nowrap text-center">
+                <span>Cotiza aquí</span>
+                <span className="flex items-center gap-2 bg-white/10 px-3 py-1 rounded-lg">
+                    <MessageCircle size={16} className="text-[#25D366] fill-[#25D366]" />
+                    <span className="tracking-wider">442 840 6201</span>
+                </span>
             </span>
         </a>
     );

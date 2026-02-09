@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import api from '../utils/api';
 import ProductCard from '../components/ProductCard';
 import { Search, Tag, Wrench, Disc, Share2, Maximize2, Minimize2 } from 'lucide-react';
@@ -36,6 +38,18 @@ const Products = () => {
     };
 
     const categories = ['Llantas', 'Llantas Camión', 'Rines', 'Baterías', 'Refacciones', 'Materiales', 'Accesorios', 'Otros'];
+    const { category: urlCategory } = useParams();
+
+    const categoryMap = {
+        'llantas': 'Llantas',
+        'llantas-camion': 'Llantas Camión',
+        'rines': 'Rines',
+        'baterias': 'Baterías',
+        'refacciones': 'Refacciones',
+        'materiales': 'Materiales',
+        'accesorios': 'Accesorios',
+        'otros': 'Otros'
+    };
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -85,6 +99,15 @@ const Products = () => {
 
         fetchProducts();
     }, []);
+
+    // Sync category with URL
+    useEffect(() => {
+        if (urlCategory && categoryMap[urlCategory.toLowerCase()]) {
+            setCategory(categoryMap[urlCategory.toLowerCase()]);
+        } else if (!urlCategory) {
+            setCategory('Llantas');
+        }
+    }, [urlCategory]);
 
     useEffect(() => {
         if (!isSearching) {
@@ -157,13 +180,15 @@ const Products = () => {
         }
 
         if (!searchParams.ancho && !searchParams.perfil && !searchParams.rin) {
-            // Clear search, show all for current category (default to Llantas if somehow lost)
+            // Clear search, show all for current category
             setIsSearching(false);
-            setCategory(prev => prev === 'Llantas Camión' ? 'Llantas Camión' : 'Llantas');
             return;
         }
 
-        setCategory('Llantas'); // Auto-select Llantas when searching
+        // Only auto-select Llantas if we're not already in a specific tire category
+        if (category !== 'Llantas' && category !== 'Llantas Camión') {
+            setCategory('Llantas');
+        }
 
         const filtered = products.filter(product => {
             if (!product.specs) return false;
@@ -182,43 +207,27 @@ const Products = () => {
     const clearSearch = () => {
         setSearchParams({ ancho: '', perfil: '', rin: '', medida: '' });
         setIsSearching(false);
-        // Reset to Llantas if not in a specific other category that has search
-        if (category === 'Llantas' || category === 'Llantas Camión') {
-            // Keep current
-        } else {
-            setCategory('Llantas');
-        }
+        // We keep the current category state; synchronizing with the URL
+        // will happen automatically if the URL changes, otherwise we stay where we are.
     };
 
     return (
         <div className="container mx-auto px-4 py-12">
-            <h1 className="text-4xl font-bold text-center mb-8 text-primary">Nuestros Productos</h1>
-
-            {/* Category Filter - MOVED TO TOP */}
-            <div className="flex flex-wrap justify-center gap-4 mb-8">
-                {categories.map(cat => (
-                    <button
-                        key={cat}
-                        onClick={() => {
-                            setCategory(cat);
-                            if (cat !== 'Refacciones') {
-                                setSelectedRefaccionType(null); // Reset refaccion selection when leaving
-                            }
-                            if (isSearching) {
-                                clearSearch();
-                                // We need to re-set the category because clearSearch might reset it
-                                setCategory(cat);
-                            }
-                        }}
-                        className={`px-6 py-2 rounded-full font-semibold transition-colors ${category === cat
-                            ? 'bg-accent text-white'
-                            : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
-                            }`}
-                    >
-                        {cat}
-                    </button>
-                ))}
-            </div>
+            <Helmet>
+                <title>{urlCategory ? `${categoryMap[urlCategory.toLowerCase()]} | 4x3 y 25% Descuento | Grupo Noguez` : 'Llantas 4x3 y 25% de Descuento | Grupo Llantero Noguez'}</title>
+                <meta
+                    name="description"
+                    content={urlCategory
+                        ? `Aprovecha 4x3 y 25% de descuento en ${categoryMap[urlCategory.toLowerCase()]} en Querétaro. Encuentra rines, refacciones y llantas en Grupo Llantero Noguez.`
+                        : "Aprovecha nuestra promoción 4x3 y 25% de descuento en llantas, rines, baterías y refacciones en Querétaro. Servicio experto y las mejores marcas."
+                    }
+                />
+                <meta property="og:title" content={urlCategory ? `${categoryMap[urlCategory.toLowerCase()]} | Promoción 4x3` : 'Llantas 4x3 y 25% de Descuento'} />
+                <meta property="og:description" content={urlCategory ? `Aprovecha 4x3 y 25% de descuento en ${categoryMap[urlCategory.toLowerCase()]}. Todo en refacciones y llantas en Querétaro.` : 'Las mejores promociones en llantas, rines y refacciones en Querétaro.'} />
+            </Helmet>
+            <h1 className="text-4xl font-bold text-center mb-12 text-primary uppercase tracking-wider">
+                {urlCategory ? category : 'Nuestros Productos'}
+            </h1>
 
             {/* Measurement Search Box - Condition: Llantas, Llantas Camión */}
             {['Llantas', 'Llantas Camión'].includes(category) && (
@@ -364,46 +373,59 @@ const Products = () => {
 
             {/* Rines Search Box */}
             {category === 'Rines' && (
-                <div className="max-w-3xl mx-auto mb-8">
-                    <h3 className="text-xl font-bold text-center mb-6 text-gray-800">Buscar Rines</h3>
-                    <div className="flex flex-col md:flex-row gap-4 items-center justify-center">
-                        {/* Input Rin */}
-                        <div className="flex w-full md:w-auto">
-                            <div className="bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg p-3 flex items-center justify-center min-w-[50px]">
-                                <Disc size={24} className="text-gray-600" />
+                <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden mb-8">
+                    {/* Header bar similar to tabs */}
+                    <div className="flex border-b border-gray-200">
+                        <div className="flex-1 py-4 px-6 text-center font-medium text-primary border-b-2 border-primary bg-gray-50">
+                            <div className="flex items-center justify-center space-x-2">
+                                <Search size={20} />
+                                <span>Buscar Rines por medida</span>
                             </div>
-                            <input
-                                type="text"
-                                name="rin"
-                                placeholder="Ej: 13"
-                                value={searchParams.rin}
-                                onChange={handleInputChange}
-                                className="w-full md:w-48 px-4 py-3 border border-gray-300 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                            />
                         </div>
+                    </div>
 
-                        {/* Input Medida */}
-                        <div className="flex w-full md:w-auto">
-                            <div className="bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg p-3 flex items-center justify-center min-w-[50px]">
-                                <Share2 size={24} className="text-gray-600" />
+                    <div className="p-6">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            {/* Input Rin */}
+                            <div className="flex">
+                                <div className="bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg p-3 flex items-center justify-center min-w-[50px]">
+                                    <Disc size={20} className="text-gray-600" />
+                                </div>
+                                <input
+                                    type="text"
+                                    name="rin"
+                                    placeholder="Rin (ej: 13)"
+                                    value={searchParams.rin}
+                                    onChange={handleInputChange}
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                />
                             </div>
-                            <input
-                                type="text"
-                                name="medida"
-                                placeholder="Ej: 4X100"
-                                value={searchParams.medida}
-                                onChange={handleInputChange}
-                                className="w-full md:w-48 px-4 py-3 border border-gray-300 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                            />
-                        </div>
 
-                        <button
-                            onClick={handleSearch}
-                            className="w-full md:w-auto bg-accent hover:bg-orange-600 text-white px-8 py-3 rounded-lg font-bold flex items-center justify-center space-x-2 transition-colors shadow-lg"
-                        >
-                            <Search size={20} />
-                            <span>Buscar</span>
-                        </button>
+                            {/* Input Medida */}
+                            <div className="flex">
+                                <div className="bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg p-3 flex items-center justify-center min-w-[50px]">
+                                    <Share2 size={20} className="text-gray-600" />
+                                </div>
+                                <input
+                                    type="text"
+                                    name="medida"
+                                    placeholder="Barrenación (ej: 4X100)"
+                                    value={searchParams.medida}
+                                    onChange={handleInputChange}
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                />
+                            </div>
+
+                            <div>
+                                <button
+                                    onClick={handleSearch}
+                                    className="w-full bg-accent hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-bold flex items-center justify-center space-x-2 transition-colors shadow-md"
+                                >
+                                    <Search size={20} />
+                                    <span>Buscar</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}
@@ -456,7 +478,8 @@ const Products = () => {
                             {refaccionesConfig[activeRefaccionesTab]?.map((item) => (
                                 <div
                                     key={item.name}
-                                    className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all overflow-hidden border border-gray-100 group"
+                                    onClick={() => setSelectedRefaccionType(item)}
+                                    className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all overflow-hidden border border-gray-100 group cursor-pointer"
                                 >
                                     <div className="h-48 overflow-hidden bg-gray-50 flex items-center justify-center p-4">
                                         <img

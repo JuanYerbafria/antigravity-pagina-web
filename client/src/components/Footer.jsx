@@ -14,8 +14,8 @@ const Footer = () => {
                             Tu seguridad rueda con nosotros. Expertos en llantas, rines y mecánica general con más de 6 años de experiencia.
                         </p>
                         <div className="flex space-x-4">
-                            <a href="https://www.facebook.com/profile.php?id=100063555729501&locale=es_LA" className="text-gray-400 hover:text-white"><Facebook /></a>
-                            <a href="https://www.instagram.com/grupo_llantero_noguez/?igsh=NXc5dTM3M29haHVn&utm_source=qr#" className="text-gray-400 hover:text-white"><Instagram /></a>
+                            <a href="https://www.facebook.com/profile.php?id=100063555729501&locale=es_LA" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white" aria-label="Facebook"><Facebook /></a>
+                            <a href="https://www.instagram.com/grupo_llantero_noguez/?igsh=NXc5dTM3M29haHVn&utm_source=qr#" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white" aria-label="Instagram"><Instagram /></a>
                         </div>
                     </div>
 

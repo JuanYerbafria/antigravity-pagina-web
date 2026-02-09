@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api from '../utils/api';
 import { Calendar, User, ArrowLeft } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 const BlogPost = () => {
     const { id } = useParams();
@@ -42,6 +43,10 @@ const BlogPost = () => {
 
     return (
         <div className="container mx-auto px-4 py-12">
+            <Helmet>
+                <title>{post.title} | Blog | Grupo Llantero Noguez</title>
+                <meta name="description" content={post.content.substring(0, 160)} />
+            </Helmet>
             <Link to="/blog" className="inline-flex items-center text-gray-600 hover:text-accent mb-8 transition-colors">
                 <ArrowLeft size={20} className="mr-2" /> Volver al Blog
             </Link>

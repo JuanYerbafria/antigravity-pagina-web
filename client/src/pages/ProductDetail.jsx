@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api from '../utils/api';
 import { ArrowLeft, Star, ShoppingCart, CheckCircle, Car, Store, Package } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 const ProductDetail = () => {
     const { id } = useParams();
@@ -58,6 +59,10 @@ const ProductDetail = () => {
 
     return (
         <div className="container mx-auto px-4 py-8">
+            <Helmet>
+                <title>{product.name} | {product.category} | Grupo Llantero Noguez</title>
+                <meta name="description" content={`Compra ${product.name} en Grupo Llantero Noguez. Las mejores promociones en ${product.category} en Querétaro.`} />
+            </Helmet>
             <Link to="/productos" className="inline-flex items-center text-gray-600 hover:text-accent mb-6 transition-colors text-sm">
                 <ArrowLeft size={18} className="mr-2" /> Volver a Productos
             </Link>
@@ -67,10 +72,15 @@ const ProductDetail = () => {
                 <div className="relative">
                     <div
                         className="bg-white rounded-lg overflow-hidden h-[400px] flex items-center justify-center p-4 cursor-zoom-in"
+                        onMouseEnter={(e) => {
+                            const rect = e.currentTarget.getBoundingClientRect();
+                            e.currentTarget._rect = rect;
+                        }}
                         onMouseMove={(e) => {
-                            const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
-                            const x = ((e.clientX - left) / width) * 100;
-                            const y = ((e.clientY - top) / height) * 100;
+                            const rect = e.currentTarget._rect;
+                            if (!rect) return;
+                            const x = ((e.clientX - rect.left) / rect.width) * 100;
+                            const y = ((e.clientY - rect.top) / rect.height) * 100;
                             e.currentTarget.style.setProperty('--zoom-x', `${x}%`);
                             e.currentTarget.style.setProperty('--zoom-y', `${y}%`);
                         }}
@@ -80,6 +90,9 @@ const ProductDetail = () => {
                                 src={product.image_url}
                                 alt={product.name}
                                 className="max-w-full max-h-full object-contain transition-transform duration-100 ease-linear hover:scale-[2]"
+                                width="600"
+                                height="400"
+                                fetchPriority="high"
                                 style={{
                                     transformOrigin: 'var(--zoom-x, 50%) var(--zoom-y, 50%)'
                                 }}

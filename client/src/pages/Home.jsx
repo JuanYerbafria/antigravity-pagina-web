@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, CheckCircle, Star, Shield, Award, Wrench } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 import api from '../utils/api';
 import ProductCard from '../components/ProductCard';
 import TireSearch from '../components/TireSearch';
@@ -24,6 +25,12 @@ const Home = () => {
 
     return (
         <div>
+            <Helmet>
+                <title>Grupo Llantero Noguez | Llantas 4x3 y 25% de Descuento</title>
+                <meta name="description" content="Aprovecha promoción 4x3 y 25% de descuento en llantas, rines y servicios automotrices en Querétaro. Expertos con más de 6 años de experiencia." />
+                <meta property="og:title" content="Grupo Llantero Noguez | Llantas 4x3 y 25% de Descuento" />
+                <meta property="og:description" content="Venta de llantas, rines y servicios automotrices en Querétaro. ¡Las mejores promociones aquí!" />
+            </Helmet>
             {/* Hero Section */}
             <div className="relative bg-primary text-white py-28 overflow-hidden">
                 {/* Background Image with Overlay */}
@@ -32,6 +39,9 @@ const Home = () => {
                         src="/images/general/header.webp"
                         alt="Background"
                         className="w-full h-full object-cover opacity-60"
+                        fetchPriority="high"
+                        width="1920"
+                        height="1080"
                     />
                     <div className="absolute inset-0 bg-gradient-to-r from-primary/70 via-primary/50 to-transparent"></div>
                 </div>
@@ -72,7 +82,7 @@ const Home = () => {
                                     <Award className="text-accent" size={20} />
                                 </div>
                                 <div>
-                                    <h3 className="font-bold text-white text-sm">Técnicos Capacitados</h3>
+                                    <p className="font-bold text-white text-sm">Técnicos Capacitados</p>
                                     <p className="text-xs text-gray-400">Profesionales expertos</p>
                                 </div>
                             </div>
@@ -81,7 +91,7 @@ const Home = () => {
                                     <Shield className="text-accent" size={20} />
                                 </div>
                                 <div>
-                                    <h3 className="font-bold text-white text-sm">Garantía Total</h3>
+                                    <p className="font-bold text-white text-sm">Garantía Total</p>
                                     <p className="text-xs text-gray-400">100% satisfacción</p>
                                 </div>
                             </div>
@@ -90,7 +100,7 @@ const Home = () => {
                                     <Wrench className="text-accent" size={20} />
                                 </div>
                                 <div>
-                                    <h3 className="font-bold text-white text-sm">Equipos modernos y precisos</h3>
+                                    <p className="font-bold text-white text-sm">Equipos modernos y precisos</p>
                                     <p className="text-xs text-gray-400">Herramientas que elevan la calidad del servicio</p>
                                 </div>
                             </div>
@@ -204,6 +214,8 @@ const Home = () => {
                                         src={brand.src || `https://placehold.co/150x80/white/333?text=${brand.name}`}
                                         alt={brand.name}
                                         className="max-w-full max-h-full object-contain"
+                                        width="128"
+                                        height="80"
                                     />
                                 </div>
                             ))}
@@ -230,6 +242,8 @@ const Home = () => {
                                         src={brand.src || `https://placehold.co/150x80/white/333?text=${brand.name}`}
                                         alt={brand.name}
                                         className="max-w-full max-h-full object-contain"
+                                        width="128"
+                                        height="80"
                                     />
                                 </div>
                             ))}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import api from '../utils/api';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 const Contact = () => {
     const [formData, setFormData] = useState({
@@ -30,6 +31,10 @@ const Contact = () => {
 
     return (
         <div className="container mx-auto px-4 py-12">
+            <Helmet>
+                <title>Contacto | Grupo Llantero Noguez | Querétaro</title>
+                <meta name="description" content="Contáctanos para cotizar llantas, rines o servicios mecánicos en Querétaro. Estamos aquí para ayudarte con la mejor atención." />
+            </Helmet>
             <h1 className="text-4xl font-bold text-center mb-12 text-primary">Contáctanos</h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">

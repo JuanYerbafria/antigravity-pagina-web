@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Clock, ArrowRight, Briefcase, Users } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 import api from '../utils/api';
 
@@ -39,6 +40,10 @@ const Vacancies = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 pb-12">
+            <Helmet>
+                <title>Únete al Equipo | Bolsa de Trabajo | Grupo Llantero Noguez</title>
+                <meta name="description" content="Forma parte de la familia Grupo Llantero Noguez. Consulta nuestras vacantes activas y únete a un equipo comprometido con la excelencia." />
+            </Helmet>
             {/* Header */}
             {/* Header */}
             <div className="bg-cover bg-center bg-fixed text-white py-24 mb-12 relative overflow-hidden" style={{ backgroundImage: "url('/images/general/fondovacante.webp')" }}>

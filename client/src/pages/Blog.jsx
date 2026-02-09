@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../utils/api';
 import { Calendar, User } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 const Blog = () => {
     const [posts, setPosts] = useState([]);
@@ -21,6 +22,10 @@ const Blog = () => {
 
     return (
         <div className="container mx-auto px-4 py-12">
+            <Helmet>
+                <title>Blog y Consejos | Grupo Llantero Noguez</title>
+                <meta name="description" content="Lee nuestros últimos artículos sobre mantenimiento automotriz, consejos para tus llantas y novedades de Grupo Llantero Noguez." />
+            </Helmet>
             <h1 className="text-4xl font-bold text-center mb-12 text-primary">Blog y Consejos</h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

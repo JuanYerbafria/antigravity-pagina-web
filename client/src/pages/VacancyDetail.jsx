@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, CheckCircle, MapPin, Clock, Calendar, Send } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 const VacancyDetail = () => {
     const { id } = useParams();
@@ -71,6 +72,10 @@ const VacancyDetail = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 pb-12">
+            <Helmet>
+                <title>{vacancy.nombre_vacante} | Vacantes | Grupo Noguez</title>
+                <meta name="description" content={`Aplica para la vacante de ${vacancy.nombre_vacante} en Grupo Llantero Noguez. Buscamos talento en ${vacancy.lugar}.`} />
+            </Helmet>
             {/* Header separate from navbar designed to match the request */}
             <div
                 className="relative bg-primary text-white pt-24 pb-32 shadow-lg bg-cover bg-center"

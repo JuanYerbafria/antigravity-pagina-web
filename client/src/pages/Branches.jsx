@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../utils/api';
 import { MapPin, Phone, Navigation } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 const Branches = () => {
     const [branches, setBranches] = useState([]);
@@ -20,6 +21,10 @@ const Branches = () => {
 
     return (
         <div className="container mx-auto px-4 py-12">
+            <Helmet>
+                <title>Nuestras Sucursales | Grupo Llantero Noguez | Ubicaciones</title>
+                <meta name="description" content="Encuentra tu sucursal de Grupo Llantero Noguez más cercana en Querétaro. Contamos con 5 ubicaciones para brindarte el mejor servicio." />
+            </Helmet>
             <h1 className="text-4xl font-bold text-center mb-8 text-primary">Nuestras Sucursales</h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -32,7 +37,7 @@ const Branches = () => {
                                 height="100%"
                                 frameBorder="0"
                                 style={{ border: 0 }}
-                                src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyCDz1ixZ23tPb1tS-av2ob3LdhEby1D0zU&q=${encodeURIComponent(branch.address)}`} // Note: Needs API Key
+                                src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyCDz1ixZ23tPb1tS-av2ob3LdhEby1D0zU&q=${encodeURIComponent(`Grupo Llantero Noguez ${branch.name} ${branch.address}`)}`} // Note: Needs API Key
                                 allowFullScreen
                                 title={branch.name}
                             ></iframe>
@@ -80,13 +85,17 @@ const Branches = () => {
                             </div>
 
                             {(() => {
-                                let mapLink = branch.map_url;
-                                if (!mapLink) {
-                                    if (branch.lat && branch.lng) {
-                                        mapLink = `https://www.google.com/maps/dir/?api=1&destination=${branch.lat},${branch.lng}`;
-                                    } else {
-                                        mapLink = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(branch.address)}`;
-                                    }
+                                // Prioritize coordinates (lat/lng) if available for maximum precision
+                                let mapLink = '';
+
+                                if (branch.lat && branch.lng) {
+                                    mapLink = `https://www.google.com/maps/dir/?api=1&destination=${branch.lat},${branch.lng}`;
+                                } else if (branch.map_url && branch.map_url.trim() !== '') {
+                                    mapLink = branch.map_url;
+                                } else {
+                                    // High-precision search query as final fallback
+                                    const query = `Grupo Llantero Noguez ${branch.name} ${branch.address}`;
+                                    mapLink = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(query)}`;
                                 }
 
                                 return (
