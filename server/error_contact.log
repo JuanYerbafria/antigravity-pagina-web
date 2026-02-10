@@ -1,0 +1,8 @@
+[2026-02-09T22:54:54.924Z] Error: self-signed certificate in certificate chain
+Stack: Error: self-signed certificate in certificate chain
+    at TLSSocket.onConnectSecure (node:_tls_wrap:1631:34)
+    at TLSSocket.emit (node:events:508:28)
+    at TLSSocket._finishInit (node:_tls_wrap:1077:8)
+    at ssl.onhandshakedone (node:_tls_wrap:863:12)
+Data: {"name":"Test Manual Robot","email":"test@example.com","phone":"1234567890","message":"Este es un mensaje automático para generar logs."}
+
