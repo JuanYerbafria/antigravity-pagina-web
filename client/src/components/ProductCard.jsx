@@ -139,7 +139,7 @@ const ProductCard = ({ product }) => {
                         <span className="text-2xl font-bold text-dark">${formatPrice(product.price)}</span>
                     )}
                     <Link
-                        to={`/productos/${product.id}`}
+                        to={`/producto/${product.id}`}
                         className="bg-[var(--color-highlight)] text-dark px-4 py-2 rounded-lg text-sm font-bold hover:bg-yellow-500 transition-colors"
                     >
                         Ver Detalles
