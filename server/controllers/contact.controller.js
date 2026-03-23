@@ -22,7 +22,7 @@ exports.submitContact = async (req, res) => {
 
         const mailOptions = {
             from: process.env.EMAIL_USER,
-            to: 'marketing.ventasnoguez@gmail.com',
+            to: 'marketingdigitalnoguez@gmail.com',
             subject: `Nuevo Mensaje de Contacto: ${name}`,
             html: `
                 <h3>Nuevo mensaje desde el sitio web</h3>

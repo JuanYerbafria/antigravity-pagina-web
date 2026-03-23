@@ -11,12 +11,11 @@ const Home = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
 
     const slides = [
-
         { type: 'image', id: 1, image: '/images/general/promo_1.webp', link: '/productos' },
         { type: 'image', id: 2, image: '/images/general/promo_2.webp', link: '/productos' },
         { type: 'image', id: 3, image: '/images/general/promo_3.webp', link: '/productos' },
         { type: 'image', id: 4, image: '/images/general/promo_4.webp', link: '/productos' },
-        { type: 'hero', id: 0 },
+        { type: 'image', id: 5, image: '/images/general/promo_5.webp', link: '/productos' },
     ];
 
     useEffect(() => {
@@ -44,7 +43,6 @@ const Home = () => {
         setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
     };
 
-
     // Auto-advance carousel
     useEffect(() => {
         const timer = setInterval(() => {
@@ -52,7 +50,6 @@ const Home = () => {
         }, 5000);
         return () => clearInterval(timer);
     }, [slides.length]);
-
 
     return (
         <div>
@@ -64,159 +61,188 @@ const Home = () => {
             </Helmet>
 
             <div className="w-full px-2 py-2">
-                <div className="flex flex-col lg:flex-row gap-2">
-                    {/* Left Column - Side Promotions (Integrated design) */}
-                    <div className="w-full lg:w-1/3 flex flex-col gap-2 order-2 lg:order-1 h-[500px] lg:h-[750px]">
-                        {/* Promo 1 - Integrated design style */}
-                        <div className="relative h-1/2 rounded-2xl overflow-hidden group bg-accent shadow-xl border border-white/5">
-                            <img
-                                src="/images/general/promo_1.webp"
-                                alt="Promoción 1"
-                                className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110"
-                            />
-                        </div>
-
-                        {/* Promo 2 - Integrated design style */}
-                        <div className="relative h-1/2 rounded-2xl overflow-hidden group bg-primary shadow-xl border border-white/5">
-                            <img
-                                src="/images/general/promo_5.webp"
-                                alt="Cambio de Aceite"
-                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                            />
-                            <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/90 to-transparent">
-                            </div>
-                        </div>
+                <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10 group/hero h-auto lg:h-[750px] bg-black">
+                    {/* Common Background for the entire section - Balanced Darkness */}
+                    <div className="absolute inset-0 z-0">
+                        <img
+                            src="/images/general/header.webp"
+                            alt="Background"
+                            className="w-full h-full object-cover opacity-45 shadow-inner"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-r from-black/100 via-black/40 to-transparent"></div>
                     </div>
 
-                    {/* Right Column - Main Carousel */}
-                    <div className="w-full lg:w-2/3 order-1 lg:order-2 h-[500px] lg:h-[750px]">
-                        {/* Hero Section Carousel */}
-                        <div className="relative bg-primary text-white rounded-2xl overflow-hidden h-full flex items-center group/home shadow-2xl border border-white/5">
-                            {/* Carousel Slides */}
-                            {slides.map((slide, index) => (
-                                <div
-                                    key={slide.id}
-                                    className={`absolute inset-0 transition-all duration-1000 ease-in-out ${currentSlide === index
-                                        ? 'opacity-100 z-10 scale-100 translate-y-0'
-                                        : index < currentSlide
-                                            ? 'opacity-0 z-0 scale-110 -translate-y-full'
-                                            : 'opacity-0 z-0 scale-105 translate-y-0'
-                                        }`}
-                                >
-                                    {slide.type === 'hero' ? (
-                                        <div className="h-full relative flex items-center py-10">
-                                            {/* Background Image with Overlay */}
-                                            <div className="absolute inset-0">
-                                                <img
-                                                    src="/images/general/header.webp"
-                                                    alt="Background"
-                                                    className="w-full h-full object-cover opacity-60 transition-transform duration-[8000ms] ease-linear"
-                                                    style={{
-                                                        transform: currentSlide === index ? 'scale(1.2)' : 'scale(1)'
-                                                    }}
-                                                    fetchPriority="high"
-                                                    width="1920"
-                                                    height="1080"
-                                                />
-                                                <div className="absolute inset-0 bg-gradient-to-r from-primary/70 via-primary/50 to-transparent"></div>
-                                            </div>
+                    <div className="relative z-10 flex flex-col lg:flex-row h-full">
+                        {/* Left Side: Static Hero Text (shifted to 40%) */}
+                        <div className="w-full lg:w-[45%] flex items-center p-8 lg:p-16 lg:pr-4 order-2 lg:order-1">
+                            <div className="w-full">
+                                <div className="flex items-center space-x-2 text-[var(--color-highlight)] font-bold tracking-wider mb-4">
+                                    <Shield size={20} className="text-[var(--color-highlight)]" />
+                                    <span className="text-xs uppercase">Más de 6 años de experiencia</span>
+                                </div>
 
-                                            <div className="container mx-auto px-8 relative z-10">
-                                                <div className="max-w-xl">
-                                                    {/* Badge */}
-                                                    <div className="flex items-center space-x-2 text-[var(--color-highlight)] font-bold tracking-wider mb-2">
-                                                        <Shield size={16} className="text-[var(--color-highlight)]" />
-                                                        <span className="text-xs uppercase">Más de 6 años de experiencia</span>
-                                                    </div>
+                                <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight mb-6 text-white drop-shadow-lg">
+                                    Tu Seguridad <br />
+                                    <span className="text-[var(--color-highlight)]">Rueda con Nosotros</span>
+                                </h1>
 
-                                                    {/* Main Title */}
-                                                    <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-4 text-white">
-                                                        Tu Seguridad <br />
-                                                        <span className="text-[var(--color-highlight)]">Rueda con Nosotros</span>
-                                                    </h1>
+                                <p className="text-base text-gray-200 mb-8 leading-relaxed max-w-lg drop-shadow-sm">
+                                    Expertos en llantas, rines y servicios automotrices. Equipos actualizados para un mejor servicio y personal capacitado para cuidar de tu vehículo.
+                                </p>
 
-                                                    {/* Description */}
-                                                    <p className="text-base text-gray-200 mb-8 max-w-md leading-relaxed">
-                                                        Expertos en llantas y servicios automotrices con personal capacitado.
-                                                    </p>
+                                <div className="flex flex-col sm:flex-row gap-4 mb-10">
+                                    <a href="/contacto" className="bg-accent hover:bg-orange-600 text-white px-8 py-3 rounded-lg font-bold flex items-center justify-center transition-all hover:scale-105 shadow-xl text-base">
+                                        Solicitar Cotización <span className="ml-2">→</span>
+                                    </a>
+                                    <a href="/productos" className="bg-white/90 hover:bg-white text-primary px-8 py-3 rounded-lg font-bold flex items-center justify-center transition-all hover:scale-105 shadow-xl text-base">
+                                        Ver Productos
+                                    </a>
+                                </div>
 
-                                                    {/* Buttons */}
-                                                    <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                                                        <a href="/contacto" className="bg-accent hover:bg-orange-600 text-white px-6 py-2.5 rounded-lg font-bold flex items-center justify-center transition-colors text-sm">
-                                                            Cotizar <span className="ml-2">→</span>
-                                                        </a>
-                                                        <a href="/productos" className="bg-white hover:bg-gray-100 text-primary px-6 py-2.5 rounded-lg font-bold flex items-center justify-center transition-colors text-sm">
-                                                            Productos
-                                                        </a>
-                                                    </div>
+                                {/* Features Row - Restored full version */}
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8 border-t border-white/10 mt-4">
+                                    <div className="flex items-start space-x-3">
+                                        <div className="bg-white/10 p-3 rounded-full backdrop-blur-sm shadow-inner group/icon shrink-0">
+                                            <Award size={22} className="text-accent group-hover/icon:scale-110 transition-transform" />
+                                        </div>
+                                        <div>
+                                            <div className="text-white font-bold text-sm">Técnicos Capacitados</div>
+                                            <div className="text-gray-400 text-xs">Profesionales expertos</div>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start space-x-3">
+                                        <div className="bg-white/10 p-3 rounded-full backdrop-blur-sm shadow-inner group/icon shrink-0">
+                                            <Shield size={22} className="text-accent group-hover/icon:scale-110 transition-transform" />
+                                        </div>
+                                        <div>
+                                            <div className="text-white font-bold text-sm">Garantía Total</div>
+                                            <div className="text-gray-400 text-xs">100% satisfacción</div>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start space-x-3">
+                                        <div className="bg-white/10 p-3 rounded-full backdrop-blur-sm shadow-inner group/icon shrink-0">
+                                            <Wrench size={22} className="text-accent group-hover/icon:scale-110 transition-transform" />
+                                        </div>
+                                        <div>
+                                            <div className="text-white font-bold text-sm leading-tight mb-1">Equipos modernos y precisos</div>
+                                            <div className="text-gray-400 text-xs leading-normal">Herramientas que elevan la calidad del servicio</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Right Side: Carousel (Rebalanced position) */}
+                        <div className="w-full lg:w-[60%] h-[500px] lg:h-full order-1 lg:order-2 p-4 lg:py-0 lg:px-12">
+                            <div className="relative w-full h-full perspective-[1500px] flex items-center justify-center">
+                                {/* Carousel Slides Container */}
+                                <div className="relative w-full h-full preserve-3d">
+                                    {slides.map((slide, index) => {
+                                        const total = slides.length;
+                                        const activeIndex = currentSlide % total;
+                                        
+                                        let offset = index - activeIndex;
+                                        if (offset > total / 2) offset -= total;
+                                        if (offset < -total / 2) offset += total;
+
+                                        const isActive = offset === 0;
+
+                                        let transformStyle = "";
+                                        let zIndex = 0;
+                                        let opacity = 0;
+
+                                        if (isActive) {
+                                            transformStyle = "translateX(0) scale(1) translateZ(0) rotateY(0)";
+                                            zIndex = 30;
+                                            opacity = 1;
+                                        } else if (offset === 1) {
+                                            transformStyle = "translateX(35%) scale(0.8) translateZ(-150px) rotateY(-15deg)";
+                                            zIndex = 20;
+                                            opacity = 0.5;
+                                        } else if (offset === -1) {
+                                            transformStyle = "translateX(-35%) scale(0.8) translateZ(-150px) rotateY(15deg)";
+                                            zIndex = 20;
+                                            opacity = 0.5;
+                                        } else {
+                                            transformStyle = offset > 0 
+                                                ? "translateX(70%) scale(0.6) translateZ(-300px)" 
+                                                : "translateX(-70%) scale(0.6) translateZ(-300px)";
+                                            zIndex = 10;
+                                            opacity = 0;
+                                        }
+
+                                        return (
+                                            <div
+                                                key={slide.id}
+                                                className="absolute inset-0 h-full transition-all duration-700 ease-out transform-gpu"
+                                                style={{
+                                                    transform: transformStyle,
+                                                    zIndex: zIndex,
+                                                    opacity: opacity,
+                                                    pointerEvents: isActive ? 'auto' : 'none',
+                                                    backfaceVisibility: 'hidden',
+                                                }}
+                                            >
+                                                <div className={`w-full h-full relative overflow-hidden transition-all duration-700 rounded-3xl ${isActive
+                                                    ? 'bg-black/20 border border-white/10 active-card-glow shadow-2xl'
+                                                    : 'bg-transparent border-none'
+                                                    }`}>
+                                                    <a href={slide.link} className="relative z-10 w-full h-full p-4 flex items-center justify-center">
+                                                        <img
+                                                            src={slide.image}
+                                                            alt={`Promoción ${index}`}
+                                                            className={`max-w-full max-h-full w-auto h-auto object-contain transition-all duration-700 ${isActive
+                                                                ? 'drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] scale-100'
+                                                                : 'drop-shadow-lg scale-90'
+                                                                }`}
+                                                        />
+                                                    </a>
+                                                    {/* Top/Bottom accents - only for active */}
+                                                    <div className={`absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-accent/30 to-transparent transition-opacity duration-700 ${isActive ? 'opacity-100' : 'opacity-0'}`}></div>
+                                                    <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-accent/30 to-transparent transition-opacity duration-700 ${isActive ? 'opacity-100' : 'opacity-0'}`}></div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    ) : (
-                                        <div className="w-full h-full relative flex items-center justify-center overflow-hidden">
-                                            {/* Blurred Background Layer */}
-                                            <div
-                                                className="absolute inset-0 z-0 bg-cover bg-center scale-125 blur-xl opacity-40 transition-transform duration-[2000ms] ease-out"
-                                                style={{
-                                                    backgroundImage: `url(${slide.image})`,
-                                                    transform: currentSlide === index ? 'scale(1.1) rotate(0deg)' : 'scale(1.3) rotate(2deg)'
-                                                }}
-                                            />
-
-                                            {/* Main Image Link */}
-                                            <a href={slide.link} className="relative z-10 block w-full h-full cursor-pointer flex items-center justify-center">
-                                                <img
-                                                    src={slide.image}
-                                                    alt={`Promoción ${index}`}
-                                                    className="max-w-full max-h-full w-auto h-full object-contain drop-shadow-2xl transition-transform duration-[8000ms] ease-linear"
-                                                    style={{
-                                                        transform: currentSlide === index ? 'scale(1.1)' : 'scale(1)',
-                                                        opacity: currentSlide === index ? 1 : 0.5
-                                                    }}
-                                                />
-                                                {/* Gradient overlay for text/dot visibility */}
-                                                <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
-                                            </a>
-                                        </div>
-                                    )}
+                                        );
+                                    })}
                                 </div>
-                            ))}
 
-                            {/* Carousel Controls */}
-                            <button
-                                onClick={prevSlide}
-                                className="absolute left-0 top-0 bottom-0 z-20 w-12 bg-black/10 hover:bg-primary/80 text-white transition-all duration-300 hidden md:flex flex-col justify-center items-center opacity-0 group-hover/home:opacity-100 hover:opacity-100"
-                                aria-label="Anterior"
-                            >
-                                <ChevronLeft size={32} className="opacity-70" />
-                            </button>
-                            <button
-                                onClick={nextSlide}
-                                className="absolute right-0 top-0 bottom-0 z-20 w-12 bg-black/10 hover:bg-primary/80 text-white transition-all duration-300 hidden md:flex flex-col justify-center items-center opacity-0 group-hover/home:opacity-100 hover:opacity-100"
-                                aria-label="Siguiente"
-                            >
-                                <ChevronRight size={32} className="opacity-70" />
-                            </button>
+                                {/* Modern Controls for 3D Carousel */}
+                                <button
+                                    onClick={prevSlide}
+                                    className="absolute left-[-20px] lg:left-0 z-[50] w-12 h-12 bg-white/10 hover:bg-accent backdrop-blur-md text-white rounded-full flex items-center justify-center transition-all hover:scale-110 shadow-lg border border-white/10"
+                                    aria-label="Anterior"
+                                >
+                                    <ChevronLeft size={24} />
+                                </button>
+                                <button
+                                    onClick={nextSlide}
+                                    className="absolute right-[-20px] lg:right-0 z-[50] w-12 h-12 bg-white/10 hover:bg-accent backdrop-blur-md text-white rounded-full flex items-center justify-center transition-all hover:scale-110 shadow-lg border border-white/10"
+                                    aria-label="Siguiente"
+                                >
+                                    <ChevronRight size={24} />
+                                </button>
 
-                            {/* Carousel Indicators */}
-
-                            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex space-x-3">
-                                {slides.map((_, index) => (
-                                    <button
-                                        key={index}
-                                        onClick={() => goToSlide(index)}
-                                        className={`transition-all duration-300 rounded-full ${currentSlide === index
-                                            ? 'bg-accent w-6 h-2'
-                                            : 'bg-white/50 hover:bg-white/80 w-2 h-2'
+                                {/* Responsive Indicators (Dots) */}
+                                <div className="absolute bottom-4 lg:bottom-10 left-1/2 -translate-x-1/2 z-[50] flex space-x-3 bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/5">
+                                    {slides.map((_, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={() => goToSlide(index)}
+                                            className={`transition-all duration-300 rounded-full ${currentSlide % slides.length === index
+                                                ? 'bg-accent w-8 h-2'
+                                                : 'bg-white/40 hover:bg-white/70 w-2 h-2'
                                             }`}
-                                        aria-label={`Ir a la diapositiva ${index + 1}`}
-                                    />
-                                ))}
+                                            aria-label={`Ir a la diapositiva ${index + 1}`}
+                                        />
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+
 
             {/* Tire Search Section */}
             <TireSearch />

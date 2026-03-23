@@ -24,7 +24,7 @@ const testEmail = async () => {
 
         const mailOptions = {
             from: process.env.EMAIL_USER,
-            to: 'marketing.ventasnoguez@gmail.com',
+            to: 'marketingdigitalnoguez@gmail.com',
             subject: 'Test Email from Server',
             text: 'Este es un mensaje de prueba para verificar la configuración de Nodemailer.'
         };
