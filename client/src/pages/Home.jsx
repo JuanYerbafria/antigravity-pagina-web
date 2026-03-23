@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, CheckCircle, Star, Shield, Award, Wrench } from 'lucide-react';
+import { Search, CheckCircle, Star, Shield, Award, Wrench, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import api from '../utils/api';
 import ProductCard from '../components/ProductCard';
@@ -8,6 +8,16 @@ import TireSearch from '../components/TireSearch';
 const Home = () => {
     const [featuredProducts, setFeaturedProducts] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [currentSlide, setCurrentSlide] = useState(0);
+
+    const slides = [
+
+        { type: 'image', id: 1, image: '/images/general/promo_1.webp', link: '/productos' },
+        { type: 'image', id: 2, image: '/images/general/promo_2.webp', link: '/productos' },
+        { type: 'image', id: 3, image: '/images/general/promo_3.webp', link: '/productos' },
+        { type: 'image', id: 4, image: '/images/general/promo_4.webp', link: '/productos' },
+        { type: 'hero', id: 0 },
+    ];
 
     useEffect(() => {
         // Fetch featured products
@@ -23,6 +33,27 @@ const Home = () => {
         fetchProducts();
     }, []);
 
+    const goToSlide = (index) => {
+        setCurrentSlide(index);
+    };
+
+    const nextSlide = () => {
+        setCurrentSlide((prev) => (prev + 1) % slides.length);
+    };
+    const prevSlide = () => {
+        setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+    };
+
+
+    // Auto-advance carousel
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentSlide((prev) => (prev + 1) % slides.length);
+        }, 5000);
+        return () => clearInterval(timer);
+    }, [slides.length]);
+
+
     return (
         <div>
             <Helmet>
@@ -31,78 +62,156 @@ const Home = () => {
                 <meta property="og:title" content="Grupo Llantero Noguez | Llantas 4x3 y 25% de Descuento" />
                 <meta property="og:description" content="Venta de llantas, rines y servicios automotrices en Querétaro. ¡Las mejores promociones aquí!" />
             </Helmet>
-            {/* Hero Section */}
-            <div className="relative bg-primary text-white py-28 overflow-hidden">
-                {/* Background Image with Overlay */}
-                <div className="absolute inset-0">
-                    <img
-                        src="/images/general/header.webp"
-                        alt="Background"
-                        className="w-full h-full object-cover opacity-60"
-                        fetchPriority="high"
-                        width="1920"
-                        height="1080"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-r from-primary/70 via-primary/50 to-transparent"></div>
-                </div>
 
-                <div className="container mx-auto px-4 relative z-10">
-                    <div className="max-w-3xl">
-                        {/* Badge */}
-                        <div className="flex items-center space-x-2 text-[var(--color-highlight)] font-bold tracking-wider mb-3">
-                            <Shield size={20} className="text-[var(--color-highlight)]" />
-                            <span className="text-sm md:text-base">MÁS DE 6 AÑOS DE EXPERIENCIA</span>
+            <div className="w-full px-2 py-2">
+                <div className="flex flex-col lg:flex-row gap-2">
+                    {/* Left Column - Side Promotions (Integrated design) */}
+                    <div className="w-full lg:w-1/3 flex flex-col gap-2 order-2 lg:order-1 h-[500px] lg:h-[750px]">
+                        {/* Promo 1 - Integrated design style */}
+                        <div className="relative h-1/2 rounded-2xl overflow-hidden group bg-accent shadow-xl border border-white/5">
+                            <img
+                                src="/images/general/promo_1.webp"
+                                alt="Promoción 1"
+                                className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110"
+                            />
                         </div>
 
-                        {/* Main Title */}
-                        <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-4 text-white">
-                            Tu Seguridad Rueda <br />
-                            <span className="text-[var(--color-highlight)]">Con Nosotros</span>
-                        </h1>
-
-                        {/* Description */}
-                        <p className="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl leading-relaxed">
-                            Expertos en llantas, rines y servicios automotrices. Equipos actualizados para un mejor servicio y personal capacitado para cuidar de tu vehículo.
-                        </p>
-
-                        {/* Buttons */}
-                        <div className="flex flex-col sm:flex-row gap-4 mb-10">
-                            <a href="/contacto" className="bg-accent hover:bg-orange-600 text-white px-8 py-3 rounded-lg font-bold flex items-center justify-center transition-colors">
-                                Solicitar Cotización <span className="ml-2">→</span>
-                            </a>
-                            <a href="/productos" className="bg-white hover:bg-gray-100 text-primary px-8 py-3 rounded-lg font-bold flex items-center justify-center transition-colors">
-                                Ver Productos
-                            </a>
+                        {/* Promo 2 - Integrated design style */}
+                        <div className="relative h-1/2 rounded-2xl overflow-hidden group bg-primary shadow-xl border border-white/5">
+                            <img
+                                src="/images/general/promo_5.webp"
+                                alt="Cambio de Aceite"
+                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                            />
+                            <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/90 to-transparent">
+                            </div>
                         </div>
+                    </div>
 
-                        {/* Features Footer */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 border-t border-white/10 pt-6">
-                            <div className="flex items-center space-x-3">
-                                <div className="bg-white/10 p-2 rounded-full">
-                                    <Award className="text-accent" size={20} />
+                    {/* Right Column - Main Carousel */}
+                    <div className="w-full lg:w-2/3 order-1 lg:order-2 h-[500px] lg:h-[750px]">
+                        {/* Hero Section Carousel */}
+                        <div className="relative bg-primary text-white rounded-2xl overflow-hidden h-full flex items-center group/home shadow-2xl border border-white/5">
+                            {/* Carousel Slides */}
+                            {slides.map((slide, index) => (
+                                <div
+                                    key={slide.id}
+                                    className={`absolute inset-0 transition-all duration-1000 ease-in-out ${currentSlide === index
+                                        ? 'opacity-100 z-10 scale-100 translate-y-0'
+                                        : index < currentSlide
+                                            ? 'opacity-0 z-0 scale-110 -translate-y-full'
+                                            : 'opacity-0 z-0 scale-105 translate-y-0'
+                                        }`}
+                                >
+                                    {slide.type === 'hero' ? (
+                                        <div className="h-full relative flex items-center py-10">
+                                            {/* Background Image with Overlay */}
+                                            <div className="absolute inset-0">
+                                                <img
+                                                    src="/images/general/header.webp"
+                                                    alt="Background"
+                                                    className="w-full h-full object-cover opacity-60 transition-transform duration-[8000ms] ease-linear"
+                                                    style={{
+                                                        transform: currentSlide === index ? 'scale(1.2)' : 'scale(1)'
+                                                    }}
+                                                    fetchPriority="high"
+                                                    width="1920"
+                                                    height="1080"
+                                                />
+                                                <div className="absolute inset-0 bg-gradient-to-r from-primary/70 via-primary/50 to-transparent"></div>
+                                            </div>
+
+                                            <div className="container mx-auto px-8 relative z-10">
+                                                <div className="max-w-xl">
+                                                    {/* Badge */}
+                                                    <div className="flex items-center space-x-2 text-[var(--color-highlight)] font-bold tracking-wider mb-2">
+                                                        <Shield size={16} className="text-[var(--color-highlight)]" />
+                                                        <span className="text-xs uppercase">Más de 6 años de experiencia</span>
+                                                    </div>
+
+                                                    {/* Main Title */}
+                                                    <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-4 text-white">
+                                                        Tu Seguridad <br />
+                                                        <span className="text-[var(--color-highlight)]">Rueda con Nosotros</span>
+                                                    </h1>
+
+                                                    {/* Description */}
+                                                    <p className="text-base text-gray-200 mb-8 max-w-md leading-relaxed">
+                                                        Expertos en llantas y servicios automotrices con personal capacitado.
+                                                    </p>
+
+                                                    {/* Buttons */}
+                                                    <div className="flex flex-col sm:flex-row gap-4 mb-8">
+                                                        <a href="/contacto" className="bg-accent hover:bg-orange-600 text-white px-6 py-2.5 rounded-lg font-bold flex items-center justify-center transition-colors text-sm">
+                                                            Cotizar <span className="ml-2">→</span>
+                                                        </a>
+                                                        <a href="/productos" className="bg-white hover:bg-gray-100 text-primary px-6 py-2.5 rounded-lg font-bold flex items-center justify-center transition-colors text-sm">
+                                                            Productos
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="w-full h-full relative flex items-center justify-center overflow-hidden">
+                                            {/* Blurred Background Layer */}
+                                            <div
+                                                className="absolute inset-0 z-0 bg-cover bg-center scale-125 blur-xl opacity-40 transition-transform duration-[2000ms] ease-out"
+                                                style={{
+                                                    backgroundImage: `url(${slide.image})`,
+                                                    transform: currentSlide === index ? 'scale(1.1) rotate(0deg)' : 'scale(1.3) rotate(2deg)'
+                                                }}
+                                            />
+
+                                            {/* Main Image Link */}
+                                            <a href={slide.link} className="relative z-10 block w-full h-full cursor-pointer flex items-center justify-center">
+                                                <img
+                                                    src={slide.image}
+                                                    alt={`Promoción ${index}`}
+                                                    className="max-w-full max-h-full w-auto h-full object-contain drop-shadow-2xl transition-transform duration-[8000ms] ease-linear"
+                                                    style={{
+                                                        transform: currentSlide === index ? 'scale(1.1)' : 'scale(1)',
+                                                        opacity: currentSlide === index ? 1 : 0.5
+                                                    }}
+                                                />
+                                                {/* Gradient overlay for text/dot visibility */}
+                                                <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+                                            </a>
+                                        </div>
+                                    )}
                                 </div>
-                                <div>
-                                    <p className="font-bold text-white text-sm">Técnicos Capacitados</p>
-                                    <p className="text-xs text-gray-400">Profesionales expertos</p>
-                                </div>
-                            </div>
-                            <div className="flex items-center space-x-3">
-                                <div className="bg-white/10 p-2 rounded-full">
-                                    <Shield className="text-accent" size={20} />
-                                </div>
-                                <div>
-                                    <p className="font-bold text-white text-sm">Garantía Total</p>
-                                    <p className="text-xs text-gray-400">100% satisfacción</p>
-                                </div>
-                            </div>
-                            <div className="flex items-center space-x-3">
-                                <div className="bg-white/10 p-2 rounded-full">
-                                    <Wrench className="text-accent" size={20} />
-                                </div>
-                                <div>
-                                    <p className="font-bold text-white text-sm">Equipos modernos y precisos</p>
-                                    <p className="text-xs text-gray-400">Herramientas que elevan la calidad del servicio</p>
-                                </div>
+                            ))}
+
+                            {/* Carousel Controls */}
+                            <button
+                                onClick={prevSlide}
+                                className="absolute left-0 top-0 bottom-0 z-20 w-12 bg-black/10 hover:bg-primary/80 text-white transition-all duration-300 hidden md:flex flex-col justify-center items-center opacity-0 group-hover/home:opacity-100 hover:opacity-100"
+                                aria-label="Anterior"
+                            >
+                                <ChevronLeft size={32} className="opacity-70" />
+                            </button>
+                            <button
+                                onClick={nextSlide}
+                                className="absolute right-0 top-0 bottom-0 z-20 w-12 bg-black/10 hover:bg-primary/80 text-white transition-all duration-300 hidden md:flex flex-col justify-center items-center opacity-0 group-hover/home:opacity-100 hover:opacity-100"
+                                aria-label="Siguiente"
+                            >
+                                <ChevronRight size={32} className="opacity-70" />
+                            </button>
+
+                            {/* Carousel Indicators */}
+
+                            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex space-x-3">
+                                {slides.map((_, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => goToSlide(index)}
+                                        className={`transition-all duration-300 rounded-full ${currentSlide === index
+                                            ? 'bg-accent w-6 h-2'
+                                            : 'bg-white/50 hover:bg-white/80 w-2 h-2'
+                                            }`}
+                                        aria-label={`Ir a la diapositiva ${index + 1}`}
+                                    />
+                                ))}
                             </div>
                         </div>
                     </div>

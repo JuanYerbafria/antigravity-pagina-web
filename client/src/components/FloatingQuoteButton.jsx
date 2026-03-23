@@ -10,7 +10,7 @@ const FloatingQuoteButton = () => {
     }
 
     // WhatsApp link with pre-filled message
-    const whatsappNumber = '5214428406201'; // Format: country code + number without spaces or special characters
+    const whatsappNumber = '5214424531774'; // Format: country code + number without spaces or special characters
     const whatsappMessage = encodeURIComponent('¡Hola! Me gustaría solicitar una cotización.');
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
@@ -35,7 +35,7 @@ const FloatingQuoteButton = () => {
                 <span>Cotiza aquí</span>
                 <span className="flex items-center gap-2 bg-white/10 px-3 py-1 rounded-lg">
                     <MessageCircle size={16} className="text-[#25D366] fill-[#25D366]" />
-                    <span className="tracking-wider">442 840 6201</span>
+                    <span className="tracking-wider">442 453 1774</span>
                 </span>
             </span>
         </a>

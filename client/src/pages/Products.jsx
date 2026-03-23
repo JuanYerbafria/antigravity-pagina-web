@@ -107,6 +107,10 @@ const Products = () => {
         } else if (!urlCategory) {
             setCategory('Llantas');
         }
+        // Limpiar búsqueda al cambiar de categoría
+        setIsSearching(false);
+        setSearchParams({ ancho: '', perfil: '', rin: '', medida: '' });
+        setSelectedRefaccionType(null);
     }, [urlCategory]);
 
     useEffect(() => {
