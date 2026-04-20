@@ -12,14 +12,14 @@ const ProductCard = ({ product }) => {
     };
 
     return (
-        <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+        <div className={`bg-white rounded-lg shadow-md overflow-hidden ${product.category !== 'Refacciones' ? 'hover:shadow-xl' : ''} transition-shadow duration-300 h-full flex flex-col`}>
             {/* Image Container with Badge */}
-            <div className="relative h-48 overflow-hidden bg-white flex items-center justify-center">
+            <div className="relative h-48 overflow-hidden bg-white flex items-center justify-center flex-shrink-0">
                 {product.image_url ? (
                     <img
                         src={product.image_url}
                         alt={product.name}
-                        className={`w-full h-full object-contain transition-transform duration-300 hover:scale-110 ${product.stock === 0 ? 'opacity-50 grayscale' : ''}`}
+                        className={`w-full h-full object-contain transition-transform duration-300 ${product.category !== 'Refacciones' ? 'hover:scale-110' : ''} ${product.stock === 0 ? 'opacity-50 grayscale' : ''}`}
                         width="400"
                         height="400"
                     />
@@ -60,20 +60,20 @@ const ProductCard = ({ product }) => {
                 )}
             </div>
 
-            {/* Content */}
-            <div className="p-5">
+            {/* Content Container */}
+            <div className="p-5 flex flex-col flex-grow">
                 {/* Star Rating */}
                 <div className="flex items-center gap-2 mb-2">
                     {/* Numeric Rating */}
                     <span className="text-3xl font-bold text-dark">
-                        {product.rating != null ? Number(product.rating).toFixed(1) : '5.0'}
+                        {(product.rating !== null && product.rating !== undefined) ? Number(product.rating).toFixed(1) : '5.0'}
                     </span>
 
                     {/* Stars */}
                     <div className="flex flex-col">
                         <div className="flex">
                             {[...Array(5)].map((_, i) => {
-                                const rating = product.rating || 5.0;
+                                const rating = (product.rating !== null && product.rating !== undefined) ? Number(product.rating) : 5.0;
                                 const starValue = i + 1;
 
                                 if (rating >= starValue) {
@@ -95,55 +95,75 @@ const ProductCard = ({ product }) => {
                                 }
                             })}
                         </div>
-                        <span className="text-xs text-gray-500">Calificación</span>
+                        <span className="text-xs text-gray-500 font-medium">Calificación</span>
                     </div>
                 </div>
 
                 {/* Brand/Category */}
-                <h3 className="text-lg font-bold text-dark mb-1">{product.category || 'Goodyear'}</h3>
+                <h3 className="text-lg font-bold text-dark mb-1">{product.category}</h3>
 
                 {/* SKU */}
                 {product.sku && (
-                    <p className="text-xs text-gray-500 mb-2">SKU: {product.sku}</p>
+                    <p className="text-sm text-gray-500 mb-2">SKU: {product.sku}</p>
                 )}
 
-                {/* Product Name/Description */}
-                <p className="text-gray-600 text-sm mb-2">{product.name}</p>
+                {/* Product Name/Description - Set a min-height for consistency */}
+                <div className="min-h-[40px] mb-3">
+                    <p className="text-gray-600 text-sm leading-tight line-clamp-2 md:line-clamp-3 overflow-hidden">
+                        {product.name}
+                    </p>
+                </div>
 
                 {/* Specs/Measurements */}
                 {product.specs && (
-                    <p className="text-xs text-gray-500 mb-4 bg-gray-100 px-2 py-1 rounded inline-block">
-                        Medida: {product.specs}
-                    </p>
+                    <div className="mb-4 mt-auto">
+                        <p className="text-sm text-gray-600 bg-gray-50 px-2 py-1 rounded inline-block border border-gray-100">
+                            Medida: {product.specs}
+                        </p>
+                    </div>
                 )}
 
-                {/* Price and Button */}
-                <div className="flex justify-between items-center">
-                    {product.category === 'Llantas' ? (
+                {/* Price and Button - Pin at the bottom */}
+                <div className="flex justify-between items-end mt-2 pt-4 border-t border-gray-50">
+                    {product.category !== 'Refacciones' && (
                         <div className="flex flex-col">
-                            <span className="text-sm text-gray-400 line-through">${formatPrice(product.price)}</span>
-                            <span className="text-2xl font-bold text-accent">${formatPrice(product.price / 1.25)}</span>
+                            {product.old_price ? (
+                                <>
+                                    <span className="text-sm text-gray-400 line-through">${formatPrice(product.old_price)}</span>
+                                    <span className="text-2xl font-bold text-accent leading-none">${formatPrice(product.price)}</span>
+                                </>
+                            ) : product.category === 'Llantas' ? (
+                                <>
+                                    <span className="text-sm text-gray-400 line-through">${formatPrice(product.price)}</span>
+                                    <span className="text-2xl font-bold text-accent leading-none">${formatPrice(product.price / 1.25)}</span>
+                                </>
+                            ) : product.category === 'Rines' ? (
+                                <>
+                                    <span className="text-sm text-gray-400 line-through">${formatPrice(product.price)}</span>
+                                    <span className="text-2xl font-bold text-accent leading-none">${formatPrice(product.price / 1.30)}</span>
+                                </>
+                            ) : product.category === 'Baterías' ? (
+                                <>
+                                    <span className="text-sm text-gray-400 line-through">${formatPrice(product.price)}</span>
+                                    <span className="text-2xl font-bold text-accent leading-none">${formatPrice(product.price / 1.20)}</span>
+                                </>
+                            ) : (
+                                <span className="text-2xl font-bold text-primary leading-none">${formatPrice(product.price)}</span>
+                            )}
                         </div>
-                    ) : product.category === 'Rines' ? (
-                        <div className="flex flex-col">
-                            <span className="text-sm text-gray-400 line-through">${formatPrice(product.price)}</span>
-                            <span className="text-2xl font-bold text-accent">${formatPrice(product.price / 1.25)}</span>
-                        </div>
-                    ) : product.category === 'Baterías' ? (
-                        <div className="flex flex-col">
-                            <span className="text-sm text-gray-400 line-through">${formatPrice(product.price)}</span>
-                            <span className="text-2xl font-bold text-accent">${formatPrice(product.price / 1.20)}</span>
+                    )}
+                    {product.category === 'Refacciones' ? (
+                        <div className="bg-gray-100 text-gray-400 px-4 py-2 rounded-lg text-sm font-bold cursor-default">
+                            Venta en sucursal
                         </div>
                     ) : (
-                        /* Llantas Camion and other categories - NO discount */
-                        <span className="text-2xl font-bold text-dark">${formatPrice(product.price)}</span>
+                        <Link
+                            to={`/producto/${product.sku || product.id}`}
+                            className="bg-highlight hover:bg-[#EBC536] text-dark px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-md active:scale-95"
+                        >
+                            Ver Detalles
+                        </Link>
                     )}
-                    <Link
-                        to={`/producto/${product.id}`}
-                        className="bg-[var(--color-highlight)] text-dark px-4 py-2 rounded-lg text-sm font-bold hover:bg-yellow-500 transition-colors"
-                    >
-                        Ver Detalles
-                    </Link>
                 </div>
             </div>
         </div>

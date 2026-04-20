@@ -58,6 +58,7 @@ const Navbar = () => {
                         <Link to="/servicios" className={getLinkClass('/servicios')}>Servicios</Link>
                         <Link to="/sucursales" className={getLinkClass('/sucursales')}>Sucursales</Link>
                         <Link to="/nosotros" className={getLinkClass('/nosotros')}>Nosotros</Link>
+                        <Link to="/promociones" className={getLinkClass('/promociones')}>Promociones</Link>
                         <Link to="/unete-al-equipo" className={getLinkClass('/unete-al-equipo')}>Únete al Equipo</Link>
                         <Link to="/blog" className={getLinkClass('/blog')}>Blog</Link>
                         <Link to="/contacto" className="bg-accent hover:bg-orange-600 text-white px-4 py-2 rounded-md transition-colors flex items-center shadow-md hover:shadow-lg">
@@ -98,6 +99,7 @@ const Navbar = () => {
                         <Link to="/servicios" className={getMobileLinkClass('/servicios')} onClick={() => setIsOpen(false)}>Servicios</Link>
                         <Link to="/sucursales" className={getMobileLinkClass('/sucursales')} onClick={() => setIsOpen(false)}>Sucursales</Link>
                         <Link to="/nosotros" className={getMobileLinkClass('/nosotros')} onClick={() => setIsOpen(false)}>Nosotros</Link>
+                        <Link to="/promociones" className={getMobileLinkClass('/promociones')} onClick={() => setIsOpen(false)}>Promociones</Link>
                         <Link to="/unete-al-equipo" className={getMobileLinkClass('/unete-al-equipo')} onClick={() => setIsOpen(false)}>Únete al Equipo</Link>
                         <Link to="/blog" className={getMobileLinkClass('/blog')} onClick={() => setIsOpen(false)}>Blog</Link>
                         <Link to="/contacto" className="block py-2 text-white bg-accent font-bold text-center mt-2 mx-4 rounded-md shadow-sm" onClick={() => setIsOpen(false)}>Contacto</Link>

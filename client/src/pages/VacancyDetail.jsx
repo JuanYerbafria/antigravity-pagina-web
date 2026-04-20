@@ -147,7 +147,7 @@ const VacancyDetail = () => {
                         </div>
                         <Link
                             to="/contacto"
-                            className="w-full md:w-auto bg-[var(--color-primary)] hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-lg shadow-md hover:shadow-xl transition-all flex items-center justify-center text-lg gap-2"
+                            className="w-full md:w-auto bg-accent hover:bg-red-700 text-white font-bold py-4 px-8 rounded-lg shadow-md hover:shadow-xl transition-all flex items-center justify-center text-lg gap-2"
                         >
                             <Send size={20} />
                             Aplicar a esta vacante

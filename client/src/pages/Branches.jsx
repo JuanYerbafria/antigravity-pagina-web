@@ -25,7 +25,15 @@ const Branches = () => {
                 <title>Nuestras Sucursales | Grupo Llantero Noguez | Ubicaciones</title>
                 <meta name="description" content="Encuentra tu sucursal de Grupo Llantero Noguez más cercana en Querétaro. Contamos con 5 ubicaciones para brindarte el mejor servicio." />
             </Helmet>
-            <h1 className="text-4xl font-bold text-center mb-8 text-primary">Nuestras Sucursales</h1>
+            <div className="text-center mb-16 flex flex-col items-center">
+                <div className="inline-block px-4 py-1.5 mb-2 text-xs font-bold tracking-widest text-accent uppercase bg-red-50 rounded-full border border-accent/10">
+                    Ubicaciones
+                </div>
+                <h1 className="text-3xl lg:text-5xl font-black text-primary drop-shadow-sm mb-4">
+                    Nuestras <span className="text-accent">sucursales</span>
+                </h1>
+                <div className="w-24 h-1.5 bg-accent rounded-full"></div>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {branches.map(branch => (

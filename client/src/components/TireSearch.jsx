@@ -90,22 +90,49 @@ const TireSearch = () => {
         return sortableItems;
     }, [results, sortConfig]);
 
+    const handleTabChange = (tab) => {
+        setActiveTab(tab);
+        setSearchParams({
+            ancho: '',
+            perfil: '',
+            rin: ''
+        });
+        setResults([]);
+        setSearched(false);
+    };
+
     return (
         <section className="py-12 bg-gray-50">
             <div className="container mx-auto px-4">
                 {/* Header */}
-                <div className="text-center mb-8">
-                    <h2 className="text-4xl font-bold text-primary mb-3">Elige la llanta perfecta para ti</h2>
-                    <p className="text-gray-600 text-lg">Tu viaje empieza con la llanta ideal</p>
-                    <p className="text-gray-600 text-sm mt-2">Si deseas adquirir llantas al mayoreo, puedes solicitar tu cotización haciendo clic en el ícono “Cotiza”</p>
+                <div className="text-center mb-8 flex flex-col items-center">
+                    <div className="inline-block px-4 py-1.5 mb-2 text-xs font-bold tracking-widest text-accent uppercase bg-red-50 rounded-full border border-accent/10">
+                        Búsqueda Inteligente
+                    </div>
+                    <h2 className="text-3xl lg:text-5xl font-black text-primary drop-shadow-sm mb-4">
+                        Elige la llanta <span className="text-accent">perfecta para ti</span>
+                    </h2>
+                    <div className="w-24 h-1.5 bg-accent rounded-full mb-2"></div>
+                    
+                    <p className="text-gray-600 text-lg mt-4">Tu viaje empieza con la llanta ideal</p>
+                    <p className="text-gray-600 text-sm mt-2 max-w-2xl text-center">Si deseas adquirir llantas al mayoreo, puedes solicitar tu cotización haciendo clic en el ícono “Cotiza”</p>
+                </div>
+
+                {/* Measurement Help Image */}
+                <div className="max-w-4xl mx-auto">
+                    <img 
+                        src="/images/general/medida.webp" 
+                        alt="Cómo leer una llanta" 
+                        className="w-full h-auto rounded-t-xl border-x border-t border-gray-200"
+                    />
                 </div>
 
                 {/* Search Box */}
-                <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+                <div className="max-w-4xl mx-auto bg-white rounded-b-xl shadow-lg overflow-hidden border-x border-b border-gray-200">
                     {/* Tabs */}
                     <div className="flex border-b border-gray-200">
                         <button
-                            onClick={() => setActiveTab('auto')}
+                            onClick={() => handleTabChange('auto')}
                             className={`flex-1 py-4 px-6 text-center font-medium transition-colors ${activeTab === 'auto'
                                 ? 'text-primary border-b-2 border-primary bg-gray-50'
                                 : 'text-gray-500 hover:text-gray-700'
@@ -117,7 +144,7 @@ const TireSearch = () => {
                             </div>
                         </button>
                         <button
-                            onClick={() => setActiveTab('camion')}
+                            onClick={() => handleTabChange('camion')}
                             className={`flex-1 py-4 px-6 text-center font-medium transition-colors ${activeTab === 'camion'
                                 ? 'text-primary border-b-2 border-primary bg-gray-50'
                                 : 'text-gray-500 hover:text-gray-700'

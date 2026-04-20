@@ -1,7 +1,8 @@
-import historyBg from '../assets/history-bg.webp';
+import React, { useState, useEffect } from 'react';
 import { Target, Award } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
-import { useState, useEffect } from 'react';
+import api from '../utils/api';
+import historyBg from '../assets/history-bg.webp';
 
 const About = () => {
     const [team, setTeam] = useState([]);
@@ -11,12 +12,8 @@ const About = () => {
     useEffect(() => {
         const fetchTeam = async () => {
             try {
-                const response = await fetch('/api/team');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch team data');
-                }
-                const data = await response.json();
-                setTeam(data);
+                const response = await api.get('/team');
+                setTeam(response.data);
             } catch (error) {
                 console.error('Error fetching team data:', error);
                 setError(error.message);
@@ -27,17 +24,16 @@ const About = () => {
 
         fetchTeam();
     }, []);
+
     return (
         <div className="w-full">
             <Helmet>
                 <title>Nuestra Historia | Grupo Llantero Noguez | Más de 6 Años</title>
                 <meta name="description" content="Conoce la historia de Grupo Llantero Noguez, una empresa familiar mexicana dedicada a la seguridad y confianza de los conductores en Querétaro desde 2019." />
             </Helmet>
+            
             {/* Hero Section - Nuestra Historia */}
             <div className="relative w-full min-h-[90vh] flex items-center justify-center bg-cover bg-center bg-no-repeat bg-fixed" style={{ backgroundImage: `url(${historyBg})` }}>
-                {/* Dark Overlay */}
-
-
                 {/* Content */}
                 <div className="relative z-10 container mx-auto px-4 text-center">
                     <div className="mb-12">
@@ -51,10 +47,8 @@ const About = () => {
 
                     <p className="text-lg md:text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed font-light">
                         Grupo Llantero Noguez nació en el 2019 como una empresa familiar mexicana, con el propósito de aportar seguridad y confianza a los conductores de Querétaro. Con la firme convicción de que una llanta no es solo un producto, sino un elemento clave para la protección de las familias en cada trayecto, se sentaron las bases de una empresa guiada por el compromiso, la honestidad y el servicio de calidad.
-
-                        Desde hace más de seis años, este proyecto ha crecido gracias a la confianza de miles de clientes y talleres que han encontrado en Grupo Llantero Noguez un aliado confiable para el cuidado de sus vehículos. Su enfoque moderno, su cercanía con la comunidad a través de redes sociales y su dedicación diaria por mejorar la atención y los procesos, reflejan el espíritu emprendedor con el que fue fundada la empresa: estar siempre más cerca de las personas, ofreciendo no solo productos, sino tranquilidad y respaldo en cada camino recorrido.
                         <br /><br />
-                        Desde hace más de seis años, este proyecto ha crecido gracias a la confianza de miles de clientes y talleres que han encontrado en Grupo Llantero Noguez un aliado confiable para el cuidado de sus vehículos. Su enfoque moderno, su cercanía con la comunidad a través de redes sociales y su dedicación diaria por mejorar la atención y los procesos, reflejan el espíritu emprendedor con el que fue fundada la empresa: estar siempre más cerca de las personas, ofreciendo no solo productos, sino tranquilidad y respaldo en cada camino recorrido.
+                        Desde hace más de seis años, este proyecto ha crecido gracias a la confianza de miles de clientes y talleres que han encontrado en Grupo Llantero Noguez un aliado confiable para el cuidado de tu vehículo. Su enfoque moderno, su cercanía con la comunidad a través de redes sociales y su dedicación diaria por mejorar la atención y los procesos, reflejan el espíritu emprendedor con el que fue fundada la empresa: estar siempre más cerca de las personas, ofreciendo no solo productos, sino tranquilidad y respaldo en cada camino recorrido.
                     </p>
 
                     {/* Decorative Element */}
@@ -68,7 +62,15 @@ const About = () => {
             <div className="container mx-auto px-4 py-20">
                 {/* Timeline */}
                 <div className="mb-20">
-                    <h2 className="text-3xl font-bold text-center mb-12 text-dark">Nuestro Camino</h2>
+                    <div className="text-center mb-16 flex flex-col items-center">
+                        <div className="inline-block px-4 py-1.5 mb-2 text-xs font-bold tracking-widest text-accent uppercase bg-red-50 rounded-full border border-accent/10">
+                            Evolución
+                        </div>
+                        <h2 className="text-3xl lg:text-5xl font-black text-primary drop-shadow-sm mb-4">
+                            Nuestro <span className="text-accent">camino</span>
+                        </h2>
+                        <div className="w-24 h-1.5 bg-accent rounded-full"></div>
+                    </div>
                     <div className="relative container mx-auto px-4 flex flex-col space-y-8">
                         {/* Central Line */}
                         <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-1 bg-accent transform md:-translate-x-1/2"></div>
@@ -121,7 +123,15 @@ const About = () => {
 
                 {/* Values */}
                 <div className="mb-20">
-                    <h2 className="text-3xl font-bold text-center mb-12 text-dark">Nuestros Valores</h2>
+                    <div className="text-center mb-16 flex flex-col items-center">
+                        <div className="inline-block px-4 py-1.5 mb-2 text-xs font-bold tracking-widest text-accent uppercase bg-red-50 rounded-full border border-accent/10">
+                            Filosofía
+                        </div>
+                        <h2 className="text-3xl lg:text-5xl font-black text-primary drop-shadow-sm mb-4">
+                            Nuestros <span className="text-accent">valores</span>
+                        </h2>
+                        <div className="w-24 h-1.5 bg-accent rounded-full"></div>
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {[
                             { title: 'Confianza', desc: 'La confianza es esencial en Grupo Llantero Noguez porque cada producto y servicio impacta directamente en la seguridad de los conductores. Por ello, brindan atención honesta y soluciones de calidad que ofrecen tranquilidad y respaldo a cada cliente.' },
@@ -138,22 +148,32 @@ const About = () => {
 
                 {/* Team */}
                 <div>
-                    <h2 className="text-3xl font-bold text-center mb-12 text-dark">Conoce al Equipo</h2>
+                    <div className="text-center mb-16 flex flex-col items-center">
+                        <div className="inline-block px-4 py-1.5 mb-2 text-xs font-bold tracking-widest text-accent uppercase bg-red-50 rounded-full border border-accent/10">
+                            Familia Noguez
+                        </div>
+                        <h2 className="text-3xl lg:text-5xl font-black text-primary drop-shadow-sm mb-4">
+                            Conoce al <span className="text-accent">equipo</span>
+                        </h2>
+                        <div className="w-24 h-1.5 bg-accent rounded-full"></div>
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                         {loading ? (
-                            <p>Cargando equipo...</p>
+                            <div className="col-span-3 py-10">Cargando equipo...</div>
                         ) : error ? (
-                            <p className="text-red-500">Error: {error}</p>
+                            <div className="col-span-3 py-10 text-red-500">Error: {error}</div>
                         ) : team.length > 0 ? (
                             team.map((member, index) => (
                                 <div key={index} className="bg-white p-6 rounded-lg shadow-sm">
-                                    <img src={member.icon_url} alt={member.nombre} className="w-32 h-32 rounded-full mx-auto mb-4 object-cover border-4 border-gray-100" />
+                                    <div className="w-32 h-32 rounded-full mx-auto mb-4 overflow-hidden border-4 border-gray-100">
+                                        <img src={member.icon_url || 'https://via.placeholder.com/150'} alt={member.nombre} className="w-full h-full object-cover" />
+                                    </div>
                                     <h3 className="text-xl font-bold text-dark">{member.nombre}</h3>
                                     <p className="text-accent font-medium">{member.puesto}</p>
                                 </div>
                             ))
                         ) : (
-                            <p>No se encontró información del equipo.</p>
+                            <div className="col-span-3 py-10">No se encontró información del equipo.</div>
                         )}
                     </div>
                 </div>

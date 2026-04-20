@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
+import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
 import Products from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
@@ -12,6 +13,7 @@ import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import Vacancies from './pages/Vacancies';
 import VacancyDetail from './pages/VacancyDetail';
+import Promotions from './pages/Promotions';
 
 const NotFound = () => (
   <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
@@ -26,6 +28,7 @@ const NotFound = () => (
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Layout>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -37,6 +40,7 @@ function App() {
           <Route path="/contacto" element={<Contact />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:id" element={<BlogPost />} />
+          <Route path="/promociones" element={<Promotions />} />
           <Route path="/unete-al-equipo" element={<Vacancies />} />
           <Route path="/unete-al-equipo/:id" element={<VacancyDetail />} />
           <Route path="*" element={<NotFound />} />

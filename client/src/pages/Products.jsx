@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import api from '../utils/api';
 import ProductCard from '../components/ProductCard';
@@ -8,7 +8,27 @@ import { Search, Tag, Wrench, Disc, Share2, Maximize2, Minimize2 } from 'lucide-
 const Products = () => {
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
-    const [category, setCategory] = useState('Llantas');
+    const { category: urlCategory } = useParams();
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const onlyPromo = queryParams.get('onlyPromo') === 'true';
+
+    const categoryMap = {
+        'llantas': 'Llantas',
+        'llantas-camion': 'Llantas Camión',
+        'rines': 'Rines',
+        'baterias': 'Baterías',
+        'refacciones': 'Refacciones',
+        'materiales': 'Materiales',
+        'accesorios': 'Accesorios',
+        'otros': 'Otros'
+    };
+
+    const initialCategory = (urlCategory && categoryMap[urlCategory.toLowerCase()]) 
+        ? categoryMap[urlCategory.toLowerCase()] 
+        : 'Llantas';
+
+    const [category, setCategory] = useState(initialCategory);
     const [loading, setLoading] = useState(true);
 
     // Measurement search state
@@ -38,18 +58,6 @@ const Products = () => {
     };
 
     const categories = ['Llantas', 'Llantas Camión', 'Rines', 'Baterías', 'Refacciones', 'Materiales', 'Accesorios', 'Otros'];
-    const { category: urlCategory } = useParams();
-
-    const categoryMap = {
-        'llantas': 'Llantas',
-        'llantas-camion': 'Llantas Camión',
-        'rines': 'Rines',
-        'baterias': 'Baterías',
-        'refacciones': 'Refacciones',
-        'materiales': 'Materiales',
-        'accesorios': 'Accesorios',
-        'otros': 'Otros'
-    };
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -57,7 +65,9 @@ const Products = () => {
                 const response = await api.get('/products');
                 const allProducts = response.data;
                 setProducts(allProducts);
-                setFilteredProducts(allProducts);
+                
+                // Remove setFilteredProducts(allProducts); from here
+                // as it will be handled by the other useEffect to prevent category flash
 
                 // Build Refacciones Config dynamically
                 const refaccionesData = allProducts.filter(p => p.category === 'Refacciones');
@@ -115,21 +125,29 @@ const Products = () => {
 
     useEffect(() => {
         if (!isSearching) {
+            let filtered = [];
             if (category === 'Refacciones') {
                 if (selectedRefaccionType) {
-                    setFilteredProducts(products.filter(p =>
+                    filtered = products.filter(p =>
                         p.category === 'Refacciones' &&
                         (p.name.toLowerCase().includes(selectedRefaccionType.keyword) ||
                             (p.specs && p.specs.toLowerCase().includes(selectedRefaccionType.keyword)))
-                    ));
+                    );
                 } else {
-                    setFilteredProducts(products.filter(p => p.category === 'Refacciones'));
+                    filtered = products.filter(p => p.category === 'Refacciones');
                 }
             } else {
-                setFilteredProducts(products.filter(p => p.category === category));
+                filtered = products.filter(p => p.category === category);
             }
+
+            // Apply special promotion filter if requested
+            if (onlyPromo) {
+                filtered = filtered.filter(p => p.is_special_promo);
+            }
+
+            setFilteredProducts(filtered);
         }
-    }, [category, products, isSearching, selectedRefaccionType]);
+    }, [category, products, isSearching, selectedRefaccionType, onlyPromo]);
 
 
 
@@ -159,23 +177,43 @@ const Products = () => {
 
             const filtered = products.filter(product => {
                 if (product.category !== 'Rines') return false;
-                if (!product.specs) return false;
+                
+                const specs = (product.specs || '').toLowerCase();
+                const name = (product.name || '').toLowerCase();
+                const searchableText = `${name} ${specs}`;
 
-                const specs = product.specs.toLowerCase();
-
-                // Check Rin (e.g. "13") - Use regex to avoid partial matches like "14" finding "114"
-                // Matches if "14" is at start/end or surrounded by non-digits (like "R14", "14X", " 14 ")
+                // Check Rin (e.g. "18") 
                 let matchesRin = true;
                 if (rinesRin) {
-                    // Escape special regex chars just in case
                     const escapedRin = rinesRin.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                    // Look for the rin number preceded by start-of-string or non-digit, AND followed by end-of-string or non-digit
-                    const rinRegex = new RegExp(`(^|\\D)${escapedRin}(\\D|$)`, 'i');
-                    matchesRin = rinRegex.test(specs);
+                    
+                    // Sanitize text: remove "ET: 15" etc.
+                    const sanitizedText = searchableText.replace(/(et|offset)[:\s]*\d+(\.\d+)?/gi, ' ');
+                    
+                    // 1. Try to find a dominant Rin size (e.g., R17 or 17X)
+                    // We prioritize Rxx or [2-digit]X patterns
+                    const dominantMatch = sanitizedText.match(/\br(\d+)\b/i) || sanitizedText.match(/\b(\d{2})\s*x/i);
+                    
+                    if (dominantMatch) {
+                        const dominantSize = dominantMatch[1];
+                        // If it has a clearly defined Rin size that isn't what we want, it's a mismatch
+                        if (dominantSize !== rinesRin) {
+                            matchesRin = false;
+                        }
+                    } else {
+                        // 2. Fallback to boundary search if no clearly dominant size found
+                        const rinRegex = new RegExp(`(^|[\\sR"'])${escapedRin}([\\sX"']|$)`, 'i');
+                        matchesRin = rinRegex.test(sanitizedText);
+                    }
                 }
 
-                // Check Medida (e.g. "4x100") - Keep simple inclusion or refine similarly if needed.
-                const matchesMedida = rinesMedida ? specs.includes(rinesMedida) : true;
+                // Check Medida/Barrenación (e.g. "4x100")
+                let matchesMedida = true;
+                if (rinesMedida) {
+                    const escapedMedida = rinesMedida.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    const medidaRegex = new RegExp(`(^|\\D)${escapedMedida}(\\D|$)`, 'i');
+                    matchesMedida = medidaRegex.test(searchableText);
+                }
 
                 return matchesRin && matchesMedida;
             });
@@ -229,9 +267,29 @@ const Products = () => {
                 <meta property="og:title" content={urlCategory ? `${categoryMap[urlCategory.toLowerCase()]} | Promoción 4x3` : 'Llantas 4x3 y 25% de Descuento'} />
                 <meta property="og:description" content={urlCategory ? `Aprovecha 4x3 y 25% de descuento en ${categoryMap[urlCategory.toLowerCase()]}. Todo en refacciones y llantas en Querétaro.` : 'Las mejores promociones en llantas, rines y refacciones en Querétaro.'} />
             </Helmet>
-            <h1 className="text-4xl font-bold text-center mb-12 text-primary uppercase tracking-wider">
-                {urlCategory ? category : 'Nuestros Productos'}
-            </h1>
+            <div className="text-center mb-16 flex flex-col items-center">
+                <div className="inline-block px-4 py-1.5 mb-2 text-xs font-bold tracking-widest text-accent uppercase bg-red-50 rounded-full border border-accent/10">
+                    {urlCategory ? 'Categoría' : 'Catálogo General'}
+                </div>
+                <h1 className="text-3xl lg:text-5xl font-black text-primary drop-shadow-sm mb-4">
+                    {!urlCategory ? (
+                        <>Nuestros <span className="text-accent">productos</span></>
+                    ) : (
+                        category
+                    )}
+                </h1>
+                <div className="w-24 h-1.5 bg-accent rounded-full mb-4"></div>
+                
+                {onlyPromo && (
+                    <div className="flex items-center gap-2 bg-red-100 text-red-700 px-4 py-2 rounded-lg text-sm font-bold shadow-sm animate-fade-in">
+                        <Tag size={16} />
+                        <span>Viendo solo promociones</span>
+                        <Link to={`/productos/${urlCategory || 'llantas'}`} className="ml-2 underline hover:text-red-900 transition-colors">
+                            Ver catálogo completo
+                        </Link>
+                    </div>
+                )}
+            </div>
 
             {/* Measurement Search Box - Condition: Llantas, Llantas Camión */}
             {['Llantas', 'Llantas Camión'].includes(category) && (
@@ -442,6 +500,7 @@ const Products = () => {
                         {searchParams.ancho && ` Ancho: ${searchParams.ancho}`}
                         {searchParams.perfil && ` Perfil: ${searchParams.perfil}`}
                         {searchParams.rin && ` Rin: ${searchParams.rin}`}
+                        {searchParams.medida && ` Barrenación: ${searchParams.medida}`}
                     </span>
                     <button
                         onClick={clearSearch}

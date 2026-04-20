@@ -11,7 +11,7 @@ const FloatingQuoteButton = () => {
 
     // WhatsApp link with pre-filled message
     const whatsappNumber = '5214424531774'; // Format: country code + number without spaces or special characters
-    const whatsappMessage = encodeURIComponent('¡Hola! Me gustaría solicitar una cotización.');
+    const whatsappMessage = encodeURIComponent('web¡Hola! Me gustaría solicitar una cotización.');
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
     return (
