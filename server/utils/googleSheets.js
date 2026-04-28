@@ -1,26 +1,27 @@
 const axios = require('axios');
 
 // Google Sheets configuration
-const SHEET_ID = '1n_OnY9MWejI9LnzyclUjRam9f8TBv4kAe2VjpYlbb4Y';
+const MAIN_SHEET_ID = '1n_OnY9MWejI9LnzyclUjRam9f8TBv4kAe2VjpYlbb4Y';
+const PROMO_SHEET_ID = '179-I_ARpse1MJqox5gzSQ8MjlYOFWSpMcTcgm_uwr1g';
 
 /**
  * Fetch all data from a specific Google Sheet tab
  */
-const getSheetData = async (sheetName) => {
+const getSheetData = async (sheetName, targetSheetId = null) => {
     try {
-        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
-        const response = await axios.get(url);
+        const sheetId = targetSheetId || MAIN_SHEET_ID;
+        const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}&t=${Date.now()}`;
+        const response = await axios.get(url, { headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' } });
 
-        // Parse the response (Google returns JSONP, need to extract JSON)
-        // Parse the response (Google returns JSONP, need to extract JSON)
-        // Regex to match the content inside setResponse(...)
-        const match = response.data.match(/google\.visualization\.Query\.setResponse\((.*)\);/);
+        // BUSCAR EL JSON DE FORMA SEGURA (entre la primera llave '{' y la última '}')
+        const startIndex = response.data.indexOf('{');
+        const endIndex = response.data.lastIndexOf('}') + 1;
 
-        if (!match) {
-            throw new Error('Failed to parse Google Sheets response format');
+        if (startIndex === -1 || endIndex === 0) {
+            throw new Error('No se encontró el contenido JSON en la respuesta de Google Sheets');
         }
 
-        const jsonString = match[1];
+        const jsonString = response.data.substring(startIndex, endIndex);
         const data = JSON.parse(jsonString);
 
         return data;
@@ -40,7 +41,7 @@ const parseSheetData = (data) => {
     const cols = data.table.cols;
 
     // Get column headers
-    const headers = cols.map(col => col.label || '');
+    const headers = cols.map(col => (col.label || '').trim());
 
     // Parse rows and create objects array
     const parsedRows = rows.map((row, index) => {
@@ -68,7 +69,10 @@ const parseSheetData = (data) => {
                 item[header] = value;
             }
         });
-        return item;
+
+        // Filter out items that are virtually empty (especially important for gviz auto-fill rows)
+        const hasData = Object.keys(item).some(key => key !== '_tempId' && item[key] !== null && item[key] !== '');
+        return hasData ? item : null;
     }).filter(item => item !== null); // Filter out empty rows
 
     return parsedRows;
@@ -76,5 +80,7 @@ const parseSheetData = (data) => {
 
 module.exports = {
     getSheetData,
-    parseSheetData
+    parseSheetData,
+    MAIN_SHEET_ID,
+    PROMO_SHEET_ID
 };

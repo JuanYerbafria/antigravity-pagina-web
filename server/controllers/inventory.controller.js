@@ -14,8 +14,15 @@ const getSheetData = async () => {
 
         const response = await axios.get(url);
 
-        // Parse the response (Google returns JSONP, need to extract JSON)
-        const jsonString = response.data.substring(47).slice(0, -2);
+        // BUSCAR EL JSON DE FORMA SEGURA (entre la primera llave '{' y la última '}')
+        const startIndex = response.data.indexOf('{');
+        const endIndex = response.data.lastIndexOf('}') + 1;
+        
+        if (startIndex === -1 || endIndex === 0) {
+            throw new Error('No se encontró el contenido JSON en la respuesta de Google Sheets');
+        }
+
+        const jsonString = response.data.substring(startIndex, endIndex);
         const data = JSON.parse(jsonString);
 
         return data;
@@ -61,34 +68,37 @@ const extractMeasurements = (description) => {
     // Try multiple patterns - order matters!
     const patterns = [
         // Pattern 1: 4-digit width "1000 R16", "1000R16", "1000 16"
-        /\b(\d{4})\s*[-\/]?\s*R?\s*(\d{2}(?:\.\d+)?)\b/i,
+        /\b(\d{4})\s*[-\/]?\s*(?:Z?R)?\s*(\d{2}(?:\.\d+)?)(?!\.?\d)/i,
 
-        // Pattern 2: 3-digit with slash "205/60R16"
-        /\b(\d{3})\s*\/\s*(\d{2})\s*R?\s*(\d{2})\b/i,
+        // Pattern 2: 3-digit with slash "205/60R16", "205/55ZR16", "205/60 R16"
+        /\b(\d{3})\s*\/\s*(\d{2})\s*(?:Z?R)?\s*(\d{2}(?:\.\d+)?)(?!\.?\d)/i,
 
         // Pattern 3: 3-digit with various separators (spaces, dashes, Xs, double slashes)
         // Matches: "205 60 16", "205-60-16", "205x60x16", "205/60/16"
-        /\b(\d{3})\s*[\s\/\-xX]+\s*(\d{2})\s*[R\s\/\-xX]*\s*(\d{2})\b/i,
+        /\b(\d{3})\s*[\s\/\-xX]+\s*(\d{2})\s*(?:Z?R|[\s\/\-xX])*\s*(\d{2}(?:\.\d+)?)(?!\.?\d)/i,
 
         // Pattern 4: Compact "2056016" or "205R16"
-        /\b(\d{3})(\d{2})R?(\d{2})\b/i,
+        /\b(\d{3})(\d{2})(?:Z?R)?(\d{2}(?:\.\d+)?)(?!\.?\d)/i,
 
-        // Pattern 5: 2-digit width "11 R22.5"
-        /\b(\d{2})\s*[-\/]?\s*R?\s*(\d{2}(?:\.\d+)?)\b/i
+        // Pattern 4.5: Flotation "31x10.50R15", "33X12.5 R 15", "35 12.50 15"
+        /\b(\d{2})\s*[xX\s\-]+\s*(\d{2}(?:\.\d{1,2})?)\s*(?:Z?R)?\s*(\d{2}(?:\.\d+)?)(?!\.?\d)/i,
+
+        // Pattern 5: 2-digit width "11 R22.5", "12.5 R20", "14.00 R24"
+        /\b(\d{2}(?:\.\d+)?)\s*[-\/]?\s*(?:Z?R)?\s*(\d{2}(?:\.\d+)?)(?!\.?\d)/i
     ];
 
     for (const pattern of patterns) {
         const match = cleaned.match(pattern);
         if (match) {
-            // Truck tires (2 or 4-digit width)
-            if (match.length === 3 && (match[1].length === 2 || match[1].length === 4)) {
+            // Truck tires (2 or 4-digit width, or matching pattern 1 & 5 which have exactly 3 regex components [full, ancho, rin])
+            if (match.length === 3) {
                 return {
                     ancho: match[1],
                     perfil: '',
                     rin: match[2]
                 };
             }
-            // Standard tires (3-digit width)
+            // Standard tires and Flotation (where regex returned 4 components [full, ancho, perfil, rin])
             if (match.length === 4) {
                 return {
                     ancho: match[1],
@@ -152,12 +162,18 @@ const searchByMeasurements = async (req, res) => {
 
             let isMatch = false;
             if (measurements) {
-                // Determine matches
-                let anchoMatch = !ancho || measurements.ancho === ancho;
-                // Perfil match logic: if search perfil is empty, it matches anything (but we usually want accurate matches)
-                // If truck tire (no profile), handle that too.
-                let perfilMatch = !perfil || (measurements.perfil === perfil || (perfil === '' && measurements.perfil === ''));
-                let rinMatch = !rin || measurements.rin === rin;
+                const matchVal = (mVal, qVal) => {
+                    if (!qVal) return true; // If no query, it's a match
+                    if (mVal === qVal) return true; // Exact string match
+                    // Try numeric match (handles 19.5 == 19.50)
+                    const n1 = parseFloat(mVal);
+                    const n2 = parseFloat(qVal);
+                    return !isNaN(n1) && !isNaN(n2) && n1 === n2;
+                };
+
+                let anchoMatch = !ancho || matchVal(measurements.ancho, ancho);
+                let perfilMatch = !perfil || (perfil === '' && measurements.perfil === '') || matchVal(measurements.perfil, perfil);
+                let rinMatch = !rin || matchVal(measurements.rin, rin);
 
                 isMatch = anchoMatch && perfilMatch && rinMatch;
             }

@@ -28,6 +28,9 @@ app.use('/api/blog', require('./routes/blog.routes'));
 app.use('/api/inventory', require('./routes/inventory.routes'));
 app.use('/api/team', require('./routes/team.routes'));
 app.use('/api/vacancies', require('./routes/vacancies.routes'));
+app.use('/api/reviews', require('./routes/reviews.routes'));
+app.use('/api/stats', require('./routes/stats.routes'));
+
 
 // Start Server
 app.listen(PORT, () => {

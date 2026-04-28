@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import api from './utils/api';
 import Layout from './components/Layout';
 import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
@@ -26,6 +27,17 @@ const NotFound = () => (
 );
 
 function App() {
+  const hasIncremented = useRef(false);
+
+  useEffect(() => {
+    if (hasIncremented.current) return;
+    hasIncremented.current = true;
+    
+    api.post('/stats/increment').catch(err => {
+      console.error('Failed to increment visits on app load:', err);
+    });
+  }, []);
+
   return (
     <Router>
       <ScrollToTop />

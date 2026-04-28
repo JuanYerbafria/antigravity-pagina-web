@@ -14,12 +14,12 @@ const ProductDetail = () => {
             try {
                 const response = await api.get(`/products/${id}`);
                 setProduct(response.data);
-                
+
                 // Security check: Refacciones should not have a detail page
                 if (response.data.category === 'Refacciones') {
                     navigate('/productos');
                 }
-                
+
                 setLoading(false);
             } catch (error) {
                 console.error('Error fetching product:', error);
@@ -69,17 +69,16 @@ const ProductDetail = () => {
                 <title>{product.name} | {product.category} | Grupo Llantero Noguez</title>
                 <meta name="description" content={`Compra ${product.name} en Grupo Llantero Noguez. Las mejores promociones en ${product.category} en Querétaro.`} />
             </Helmet>
-            <Link 
-                to={`/productos/${
-                    product.category === 'Llantas' ? 'llantas' :
+            <Link
+                to={`/productos/${product.category === 'Llantas' ? 'llantas' :
                     product.category === 'Llantas Camión' ? 'llantas-camion' :
-                    product.category === 'Rines' ? 'rines' :
-                    product.category === 'Baterías' ? 'baterias' :
-                    product.category === 'Refacciones' ? 'refacciones' :
-                    product.category === 'Materiales' ? 'materiales' :
-                    product.category === 'Accesorios' ? 'accesorios' :
-                    'llantas'
-                }`} 
+                        product.category === 'Rines' ? 'rines' :
+                            product.category === 'Baterías' ? 'baterias' :
+                                product.category === 'Refacciones' ? 'refacciones' :
+                                    product.category === 'Materiales' ? 'materiales' :
+                                        product.category === 'Accesorios' ? 'accesorios' :
+                                            'llantas'
+                    }`}
                 className="inline-flex items-center text-gray-600 hover:text-accent mb-6 transition-colors text-sm"
             >
                 <ArrowLeft size={18} className="mr-2" /> Volver a {product.category || 'Productos'}
@@ -259,12 +258,12 @@ const ProductDetail = () => {
                                 <div className="flex items-baseline gap-2">
                                     <span className="text-4xl font-bold text-accent">
                                         ${formatPrice(
-                                            product.old_price 
-                                            ? product.price 
-                                            : product.category === 'Llantas' ? product.price / 1.25 
-                                            : product.category === 'Rines' ? product.price / 1.30
-                                            : product.category === 'Baterías' ? product.price / 1.20
-                                            : product.price
+                                            product.old_price
+                                                ? product.price
+                                                : product.category === 'Llantas' ? product.price / 1.25
+                                                    : product.category === 'Rines' ? product.price / 1.30
+                                                        : product.category === 'Baterías' ? product.price / 1.20
+                                                            : product.price
                                         )}
                                     </span>
                                     <span className="text-sm text-gray-500 ml-2">Precio con descuento {product.category === 'Baterías' && '(entregando casco)'}</span>
@@ -337,7 +336,7 @@ const ProductDetail = () => {
                             </ul>
                         </div>
                     )}
-                    
+
                     {product.category === 'Rines' && (
                         <div className="bg-gray-50 p-4 rounded-xl mb-6 border border-gray-100 shadow-inner">
                             <p className="font-bold text-dark flex items-center text-sm">

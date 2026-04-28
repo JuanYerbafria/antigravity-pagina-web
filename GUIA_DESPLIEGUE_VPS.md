@@ -133,5 +133,41 @@ Si al entrar a `/contacto` o `/productos` te sale error 404, es porque el servid
 
 ---
 
-¡Listo! Con estos pasos tu sitio queda 100% funcional.
+## Parte 7: Mantenimiento y Actualizaciones (Muy Importante)
+
+Si haces cambios en el código y los subes al VPS, o si borraste por error la carpeta `node_modules`, sigue estos pasos para que el sitio vuelva a funcionar:
+
+### 1. Si el servidor no arranca (Error "Cannot find module")
+Si al intentar iniciar el servidor te sale un error de que falta una librería (como `express` o `axios`), entra a la terminal del VPS y ejecuta:
+```bash
+# 1. Entrar a la carpeta de la API
+cd /usr/local/lsws/Example/html/api
+
+# 2. Reinstalar todas las librerías
+npm install
+
+# 3. Reiniciar el proceso
+pm2 restart api-noguez
+```
+
+### 2. Si subiste cambios en el código del Backend (`server`)
+Cada vez que subas un archivo nuevo a la carpeta `api` (como un controlador o una ruta):
+```bash
+pm2 restart api-noguez
+```
+
+### 3. Si subiste cambios en el código del Frontend (`client`)
+1. Genera el build en tu computadora (`npm run build`).
+2. Sube el contenido de `dist` a la carpeta `html` del VPS.
+3. **No es necesario reiniciar nada**, los cambios se verán reflejados al refrescar la página (`Ctrl + F5`).
+
+### 4. Ver qué está pasando (Logs)
+Si algo falla y no sabes qué es, usa este comando para ver los errores en tiempo real:
+```bash
+pm2 logs api-noguez --lines 50
+```
+
+---
+
+¡Listo! Con estos pasos tu sitio queda 100% funcional y bajo control.
 

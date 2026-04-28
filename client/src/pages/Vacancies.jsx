@@ -7,14 +7,25 @@ import api from '../utils/api';
 
 const Vacancies = () => {
     const [vacancies, setVacancies] = useState([]);
+    const [visits, setVisits] = useState(0);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchVacancies = async () => {
+        const fetchData = async () => {
             try {
-                const response = await api.get('/vacancies');
-                setVacancies(response.data);
+                // Fetch vacancies
+                const vacanciesResponse = await api.get('/vacancies');
+                setVacancies(vacanciesResponse.data);
+
+                // Fetch visits
+                try {
+                    const statsResponse = await api.get('/stats');
+                    setVisits(statsResponse.data.visits);
+                } catch (statsErr) {
+                    console.error('Error fetching stats:', statsErr);
+                }
+
             } catch (err) {
                 console.error(err);
                 setError(err.message);
@@ -23,7 +34,7 @@ const Vacancies = () => {
             }
         };
 
-        fetchVacancies();
+        fetchData();
     }, []);
 
     if (loading) return (
@@ -110,13 +121,15 @@ const Vacancies = () => {
                         </div>
                     </div>
 
-                    {/* CARD 4 — Nuestra Cultura */}
+                    {/* CARD 4 — Visit Counter */}
                     <div className="md:col-span-4 bg-accent p-12 rounded-2xl flex flex-col justify-start relative overflow-hidden group">
                         <div className="z-10">
-                            <h3 className="text-3xl font-black text-white mb-4 tracking-tighter">Nuestra Cultura</h3>
-                            <p className="text-white/90 font-medium leading-relaxed text-lg">
-                                Excelencia operativa en un entorno de respeto y crecimiento continuo. <br />
-                                ¡Súmate al equipo!
+                            <h3 className="text-3xl font-black text-white mb-4 tracking-tighter">Personas que visitan nuestra página</h3>
+                            <div className="flex items-baseline mt-4 mb-2">
+                                <span className="text-6xl font-black text-white tracking-tighter">{visits.toLocaleString()}</span>
+                            </div>
+                            <p className="text-white/80 font-bold uppercase tracking-widest text-xs mt-2">
+                                Visitantes Totales
                             </p>
                         </div>
                         <div className="absolute bottom-0 right-0 opacity-10 transform translate-x-12 translate-y-12 transition-transform group-hover:scale-125">
