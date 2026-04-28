@@ -347,6 +347,25 @@ exports.getProductById = async (req, res) => {
             }
         }
 
+        // SPECIAL OVERRIDE FOR BATERIAS: If found in PROMOCIONES_BATERIAS, update price
+        if ((product.category === 'Baterías' || idOrSku.startsWith('BAT')) && promoBateriasData) {
+            const promoBaterias = parseSheetData(promoBateriasData);
+            const promoInfo = promoBaterias.find(pb => {
+                const rowSku = pb.SKU || pb.sku;
+                return String(rowSku || '').trim().toLowerCase() === String(product.sku || '').toLowerCase();
+            });
+            
+            if (promoInfo) {
+                const specialPrice = promoInfo['PRECIO REBAJA'] || promoInfo['precio rebaja'] || promoInfo['PRECIO PROMOCION'] || promoInfo['precio promocion'] || 0;
+                if (specialPrice && parseFloat(specialPrice) > 0) {
+                    product.price = parseFloat(specialPrice);
+                    product.old_price = promoInfo['PRECIO ANTERIOR'] || promoInfo['precio anterior'] || product.price;
+                    product.is_promo = true;
+                    product.promocion = 'Oferta';
+                }
+            }
+        }
+
         res.json(product);
     } catch (error) {
         console.error('Error fetching product detail:', error);

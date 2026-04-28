@@ -159,6 +159,7 @@ const ProductCard = ({ product }) => {
                     ) : (
                         <Link
                             to={`/producto/${product.sku || product.id}`}
+                            state={{ from: window.location.pathname }}
                             className="bg-highlight hover:bg-[#EBC536] text-dark px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-md active:scale-95"
                         >
                             Ver Detalles

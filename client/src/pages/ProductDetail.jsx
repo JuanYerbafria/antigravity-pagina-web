@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation, useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 import { ArrowLeft, Star, ShoppingCart, CheckCircle, Car, Store, Package, Award, Wrench, Shield, Hash, ChevronRight } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 
 const ProductDetail = () => {
     const { id } = useParams();
+    const location = useLocation();
+    const navigate = useNavigate();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -70,7 +72,7 @@ const ProductDetail = () => {
                 <meta name="description" content={`Compra ${product.name} en Grupo Llantero Noguez. Las mejores promociones en ${product.category} en Querétaro.`} />
             </Helmet>
             <Link
-                to={`/productos/${product.category === 'Llantas' ? 'llantas' :
+                to={location.state?.from || `/productos/${product.category === 'Llantas' ? 'llantas' :
                     product.category === 'Llantas Camión' ? 'llantas-camion' :
                         product.category === 'Rines' ? 'rines' :
                             product.category === 'Baterías' ? 'baterias' :
@@ -81,7 +83,7 @@ const ProductDetail = () => {
                     }`}
                 className="inline-flex items-center text-gray-600 hover:text-accent mb-6 transition-colors text-sm"
             >
-                <ArrowLeft size={18} className="mr-2" /> Volver a {product.category || 'Productos'}
+                <ArrowLeft size={18} className="mr-2" /> {location.state?.from === '/promociones' ? 'Volver a Promociones' : location.state?.from === '/' ? 'Volver a Inicio' : `Volver a ${product.category || 'Productos'}`}
             </Link>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
