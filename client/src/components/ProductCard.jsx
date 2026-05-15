@@ -135,17 +135,17 @@ const ProductCard = ({ product }) => {
                             ) : product.category === 'Llantas' ? (
                                 <>
                                     <span className="text-sm text-gray-400 line-through">${formatPrice(product.price)}</span>
-                                    <span className="text-2xl font-bold text-accent leading-none">${formatPrice(product.price / 1.25)}</span>
+                                    <span className="text-2xl font-bold text-accent leading-none">${formatPrice(product.price * 0.85)}</span>
                                 </>
                             ) : product.category === 'Rines' ? (
                                 <>
                                     <span className="text-sm text-gray-400 line-through">${formatPrice(product.price)}</span>
-                                    <span className="text-2xl font-bold text-accent leading-none">${formatPrice(product.price / 1.30)}</span>
+                                    <span className="text-2xl font-bold text-accent leading-none">${formatPrice(product.price * 0.70)}</span>
                                 </>
                             ) : product.category === 'Baterías' ? (
                                 <>
                                     <span className="text-sm text-gray-400 line-through">${formatPrice(product.price)}</span>
-                                    <span className="text-2xl font-bold text-accent leading-none">${formatPrice(product.price / 1.20)}</span>
+                                    <span className="text-2xl font-bold text-accent leading-none">${formatPrice(product.price * 0.80)}</span>
                                 </>
                             ) : (
                                 <span className="text-2xl font-bold text-primary leading-none">${formatPrice(product.price)}</span>

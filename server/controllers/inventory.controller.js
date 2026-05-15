@@ -119,7 +119,7 @@ const filterColumns = (products) => {
     if (products.length === 0) return [];
 
     const availableColumns = Object.keys(products[0]);
-    const desiredColumns = ['DESCRIPCION', 'P.U', 'EXISTENCIA', 'DESC.25%', 'PROM.4X3', 'BODEGA'];
+    const desiredColumns = ['DESCRIPCION', 'PRECIO', 'EXISTENCIA', 'DESC.15%', 'PROM.4X3', 'BODEGA'];
 
     return products.map(product => {
         const filtered = {};

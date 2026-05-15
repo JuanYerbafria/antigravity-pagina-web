@@ -72,8 +72,8 @@ const TireSearch = () => {
                 let aValue = a[sortConfig.key];
                 let bValue = b[sortConfig.key];
 
-                // Handle numbers for P.U
-                if (sortConfig.key === 'P.U') {
+                // Handle numbers for PRECIO
+                if (sortConfig.key === 'PRECIO') {
                     aValue = typeof aValue === 'string' ? parseFloat(aValue.replace(/[^0-9.-]+/g, "")) : aValue;
                     bValue = typeof bValue === 'string' ? parseFloat(bValue.replace(/[^0-9.-]+/g, "")) : bValue;
                 }
@@ -266,19 +266,19 @@ const TireSearch = () => {
                                                     <th className="px-4 py-3 text-left text-sm font-bold">DESCRIPCIÓN</th>
                                                     <th
                                                         className="group px-4 py-3 text-left text-sm font-bold cursor-pointer hover:bg-white/10 transition-all duration-200 flex items-center gap-2 select-none"
-                                                        onClick={() => requestSort('P.U')}
+                                                        onClick={() => requestSort('PRECIO')}
                                                     >
-                                                        P.U
+                                                        PRECIO
                                                         <ArrowUpDown
                                                             size={16}
-                                                            className={`transition-colors duration-200 ${sortConfig.key === 'P.U'
+                                                            className={`transition-colors duration-200 ${sortConfig.key === 'PRECIO'
                                                                 ? 'text-white opacity-100'
                                                                 : 'text-white/50 group-hover:text-white group-hover:opacity-100'
                                                                 }`}
                                                         />
                                                     </th>
                                                     <th className="px-4 py-3 text-center text-sm font-bold">EXISTENCIA</th>
-                                                    <th className="px-4 py-3 text-left text-sm font-bold">DESC 25%</th>
+                                                    <th className="px-4 py-3 text-left text-sm font-bold">DESC 15%</th>
                                                     <th className="px-4 py-3 text-left text-sm font-bold">PROM 4X3</th>
                                                     <th className="px-4 py-3 text-left text-sm font-bold">BODEGA</th>
                                                 </tr>
@@ -290,10 +290,10 @@ const TireSearch = () => {
                                                         <tr key={index} className="hover:bg-gray-50 transition-colors">
                                                             <td className="px-4 py-3 text-sm text-gray-900 font-medium">{result.DESCRIPCION || '-'}</td>
                                                             <td className="px-4 py-3 text-sm text-gray-900">
-                                                                {result['P.U'] ? (
-                                                                    typeof result['P.U'] === 'number'
-                                                                        ? `$${result['P.U'].toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-                                                                        : result['P.U']
+                                                                {result['PRECIO'] ? (
+                                                                    typeof result['PRECIO'] === 'number'
+                                                                        ? `$${result['PRECIO'].toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                                                                        : result['PRECIO']
                                                                 ) : '-'}
                                                             </td>
                                                             <td className="px-4 py-3 text-sm text-center">
@@ -309,10 +309,10 @@ const TireSearch = () => {
                                                                 ) : '-'}
                                                             </td>
                                                             <td className="px-4 py-3 text-sm text-gray-900">
-                                                                {result['DESC.25%'] && result['DESC.25%'] !== 0 && result['DESC.25%'] !== '0' ? (
-                                                                    typeof result['DESC.25%'] === 'number'
-                                                                        ? `$${result['DESC.25%'].toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-                                                                        : result['DESC.25%']
+                                                                {result['DESC.15%'] && result['DESC.15%'] !== 0 && result['DESC.15%'] !== '0' ? (
+                                                                    typeof result['DESC.15%'] === 'number'
+                                                                        ? `$${result['DESC.15%'].toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                                                                        : result['DESC.15%']
                                                                 ) : 'NO APLICA'}
                                                             </td>
                                                             <td className="px-4 py-3 text-sm text-gray-900">

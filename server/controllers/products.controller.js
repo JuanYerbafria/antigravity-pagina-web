@@ -30,7 +30,7 @@ const mapProductFields = (product, index) => {
         oldPrice = price;
         // Use normalized category for checks
         if (category.toLowerCase().includes('llanta')) {
-            price = price / 1.25;
+            price = price * 0.80;
             promoLabel = 'Oferta';
         } else if (category.toLowerCase().includes('rin')) {
             price = price / 1.40;
@@ -109,7 +109,7 @@ exports.getProducts = async (req, res) => {
                 const sku = String(pr.SKU || pr.sku || '').trim().toLowerCase();
                 if (sku) {
                     const existing = productsMap.get(sku);
-                    if (existing) {
+                    if (existing && existing.is_promo) {
                         const specialPrice = pr['PRECIO REBAJA'] || pr['precio rebaja'] || 0;
                         if (specialPrice && parseFloat(specialPrice) > 0) {
                             existing.price = parseFloat(specialPrice);
@@ -130,7 +130,7 @@ exports.getProducts = async (req, res) => {
                 const sku = String(pl.SKU || pl.sku || '').trim().toLowerCase();
                 if (sku) {
                     const existing = productsMap.get(sku);
-                    if (existing) {
+                    if (existing && existing.is_promo) {
                         const specialPrice = pl['PRECIO REBAJA'] || pl['precio rebaja'] || pl['PRECIO PROMOCION'] || pl['precio promocion'] || 0;
                         if (specialPrice && parseFloat(specialPrice) > 0) {
                             existing.price = parseFloat(specialPrice);
@@ -151,7 +151,7 @@ exports.getProducts = async (req, res) => {
                 const sku = String(pb.SKU || pb.sku || '').trim().toLowerCase();
                 if (sku) {
                     const existing = productsMap.get(sku);
-                    if (existing) {
+                    if (existing && existing.is_promo) {
                         const specialPrice = pb['PRECIO REBAJA'] || pb['precio rebaja'] || pb['PRECIO PROMOCION'] || pb['precio promocion'] || 0;
                         if (specialPrice && parseFloat(specialPrice) > 0) {
                             existing.price = parseFloat(specialPrice);
@@ -312,7 +312,7 @@ exports.getProductById = async (req, res) => {
 
         // Improved lookup: Try multiple ways to find the product
         let product = allProducts.find(p => String(p.sku || '').trim().toLowerCase() === idOrSku.toLowerCase());
-        
+
         if (!product) {
             // Try matching whole ID string (useful for p-index-SKU format)
             product = allProducts.find(p => String(p.id).toLowerCase() === idOrSku.toLowerCase());
@@ -328,6 +328,37 @@ exports.getProductById = async (req, res) => {
             return res.status(404).json({ message: 'Producto no encontrado' });
         }
 
+        // SPECIAL OVERRIDE FOR LLANTAS: If found in PROMOCIONES_LLANTAS, update price
+        if ((product.category === 'Llantas' || idOrSku.startsWith('LLAN')) && promoLlantasData) {
+            const promoLlantas = parseSheetData(promoLlantasData);
+            const promoInfo = promoLlantas.find(pl => {
+                const rowSku = pl.SKU || pl.sku;
+                return String(rowSku || '').trim().toLowerCase() === String(product.sku || '').toLowerCase();
+            });
+
+            if (promoInfo) {
+                const precioPromocion = promoInfo['PRECIO PROMOCIÓN'] || promoInfo['PRECIO PROMOCION'] || promoInfo['precio promocion'] || 0;
+                const desc20 = promoInfo['DESC.20%'] || promoInfo['desc.20%'] || 0;
+                
+                let p = parseFloat(desc20 || 0);
+                let op = parseFloat(precioPromocion || 0);
+                
+                if (p === 0 && op > 0) p = op * 0.80;
+                
+                if (p > 0) {
+                    product.price = p;
+                    product.old_price = op > 0 ? op : product.price;
+                    product.is_promo = true;
+                    product.promocion = '4x3';
+                } else if (op > 0) {
+                    product.price = op;
+                    product.old_price = promoInfo['PRECIO ANTERIOR'] || promoInfo['precio anterior'] || product.price;
+                    product.is_promo = true;
+                    product.promocion = '4x3';
+                }
+            }
+        }
+
         // SPECIAL OVERRIDE FOR RINES: If found in PROMOCIONES_RINES, update price
         if ((product.category === 'Rines' || idOrSku.startsWith('RIN')) && promoRinesData) {
             const promoRines = parseSheetData(promoRinesData);
@@ -335,7 +366,7 @@ exports.getProductById = async (req, res) => {
                 const rowSku = pr.SKU || pr.sku;
                 return String(rowSku || '').trim().toLowerCase() === String(product.sku || '').toLowerCase();
             });
-            
+
             if (promoInfo) {
                 const specialPrice = promoInfo['PRECIO REBAJA'] || promoInfo['precio rebaja'] || 0;
                 if (specialPrice && parseFloat(specialPrice) > 0) {
@@ -354,7 +385,7 @@ exports.getProductById = async (req, res) => {
                 const rowSku = pb.SKU || pb.sku;
                 return String(rowSku || '').trim().toLowerCase() === String(product.sku || '').toLowerCase();
             });
-            
+
             if (promoInfo) {
                 const specialPrice = promoInfo['PRECIO REBAJA'] || promoInfo['precio rebaja'] || promoInfo['PRECIO PROMOCION'] || promoInfo['precio promocion'] || 0;
                 if (specialPrice && parseFloat(specialPrice) > 0) {
@@ -379,7 +410,7 @@ exports.getPromotions = async (req, res) => {
     console.log('GET PROMOTIONS CALLED (MAIN SHEET TABS)');
     try {
         console.log('Fetching promotion products from PROMOCIONES_LLANTAS and PROMOCIONES_RINES...');
-        
+
         // Fetch data parallelly
         const [productosData, promoLlantasData, promoRinesData, promoBateriasData] = await Promise.all([
             getSheetData('PRODUCTOS', MAIN_SHEET_ID),
@@ -395,21 +426,21 @@ exports.getPromotions = async (req, res) => {
         // Map main products to get image URLs by SKU
         const productsMap = new Map();
         let mainProductsPromos = [];
-        
+
         if (productosData) {
             const productsRows = parseSheetData(productosData);
             productsRows.forEach(p => {
                 const sku = p.SKU || p.sku;
                 if (sku) productsMap.set(String(sku).trim().toLowerCase(), p);
-                
+
                 // If it's a "rebaja" product, add it to the promotions list automatically
                 const rebajaFlag = p['producto_rebaja'] || p['PRODUCTO_REBAJA'] || 0;
                 if (String(rebajaFlag) === '1') {
                     let discountDivisor = 1.0;
                     const cat = (p.category || '').toLowerCase();
-                    if (cat.includes('llanta')) discountDivisor = 1.25;
+                    if (cat.includes('llanta')) discountDivisor = 0.80;
                     else if (cat.includes('rin')) discountDivisor = 1.40;
-                    
+
                     const price = parseFloat(p.price || 0);
                     mainProductsPromos.push({
                         id: `promo-main-${p.id || sku}`,
@@ -437,7 +468,7 @@ exports.getPromotions = async (req, res) => {
             const llantasPromos = llantasRows.map((row, i) => {
                 const sku = String(row.SKU || row.sku || '').trim();
                 const mainInfo = productsMap.get(sku.toLowerCase()) || {};
-                
+
                 // Helper to find value by multiple possible header names
                 const getValue = (keys) => {
                     for (const key of keys) {
@@ -449,19 +480,32 @@ exports.getPromotions = async (req, res) => {
                 // If already added via rebajaFlag, skip to avoid duplicates
                 if (mainProductsPromos.some(p => p.sku === sku)) return null;
 
-                const priceValue = getValue(['PRECIO PROMOCION', 'precio promocion', 'PRECIO PROMOCIÓN', 'ECIO PROMOCI', 'PROMOCION', 'PRECIO']);
-                const oldPriceValue = getValue(['PRECIO ANTERIOR', 'precio anterior', 'RECIO ANTERIC', 'ANTERIOR']);
+                const precioPromocion = getValue(['PRECIO PROMOCIÓN', 'PRECIO PROMOCION', 'precio promocion', 'ECIO PROMOCI']);
+                const desc20 = getValue(['DESC.20%', 'desc.20%']);
+                const precioAnterior = getValue(['PRECIO ANTERIOR', 'precio anterior', 'RECIO ANTERIC', 'ANTERIOR']);
                 
+                let p = parseFloat(desc20 || 0);
+                let op = parseFloat(precioPromocion || 0);
+                
+                // If DESC.20% doesn't exist, calculate it from PRECIO PROMOCIÓN
+                if (p === 0 && op > 0) p = op * 0.80;
+                
+                // If PRECIO PROMOCIÓN doesn't exist, fallback to old logic
+                if (op === 0) {
+                    p = parseFloat(getValue(['PRECIO PROMOCION', 'precio promocion', 'PRECIO PROMOCIÓN', 'ECIO PROMOCI', 'PROMOCION', 'PRECIO']) || 0);
+                    op = parseFloat(precioAnterior || 0);
+                }
+
                 return {
                     id: `promo-llan-${i}`,
                     sku: sku,
                     name: getValue(['DESCRIPCION', 'descripcion', 'DESCRIPCIÓN', 'NAME', 'name']) || mainInfo.name || 'Llanta Goodyear',
                     category: 'Llantas',
-                    price: parseFloat(priceValue || 0),
-                    old_price: parseFloat(oldPriceValue || 0),
+                    price: p,
+                    old_price: op,
                     image_url: getValue(['image_url', 'IMAGE_URL', 'FOTO', 'foto', 'URL', 'url']) || mainInfo.image_url || mainInfo.FOTO || mainInfo.URL || mainInfo.foto || '',
                     stock: parseInt(getValue(['BODEGA', 'bodega', 'EXISTENCIA', 'existencia', 'STOCK', 'stock']) || 0),
-                    promocion: getValue(['PROM.4X3', '4x3', 'PROM 4X3']) || '4x3',
+                    promocion: '4x3',
                     specs: getValue(['MEDIDA', 'medida', 'SPECS', 'specs']) || mainInfo.specs || null,
                     rating: 4.5
                 };
@@ -475,7 +519,7 @@ exports.getPromotions = async (req, res) => {
             const rinesPromos = rinesRows.map((row, i) => {
                 const sku = String(row.SKU || row.sku || '').trim();
                 const mainInfo = productsMap.get(sku.toLowerCase()) || {};
-                
+
                 const getValue = (keys) => {
                     for (const key of keys) {
                         if (row[key] !== undefined && row[key] !== null) return row[key];
@@ -488,7 +532,7 @@ exports.getPromotions = async (req, res) => {
 
                 const priceValue = getValue(['PRECIO REBAJA', 'precio rebaja', 'PRECIO PROMOCION', 'ECIO PROMOCI', 'PRECIO']);
                 const oldPriceValue = getValue(['PRECIO ANTERIOR', 'precio anterior', 'RECIO ANTERIC', 'ANTERIOR']);
-                
+
                 return {
                     id: `promo-rin-${i}`,
                     sku: sku,
@@ -512,7 +556,7 @@ exports.getPromotions = async (req, res) => {
             const bateriasPromos = bateriasRows.map((row, i) => {
                 const sku = String(row.SKU || row.sku || '').trim();
                 const mainInfo = productsMap.get(sku.toLowerCase()) || {};
-                
+
                 const getValue = (keys) => {
                     for (const key of keys) {
                         if (row[key] !== undefined && row[key] !== null) return row[key];
@@ -525,7 +569,7 @@ exports.getPromotions = async (req, res) => {
 
                 const priceValue = getValue(['PRECIO REBAJA', 'precio rebaja', 'PRECIO PROMOCION', 'precio promocion', 'ECIO PROMOCI', 'PRECIO']);
                 const oldPriceValue = getValue(['PRECIO ANTERIOR', 'precio anterior', 'RECIO ANTERIC', 'ANTERIOR']);
-                
+
                 return {
                     id: `promo-bat-${i}`,
                     sku: sku,

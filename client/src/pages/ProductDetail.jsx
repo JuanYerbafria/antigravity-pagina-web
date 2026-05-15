@@ -262,9 +262,9 @@ const ProductDetail = () => {
                                         ${formatPrice(
                                             product.old_price
                                                 ? product.price
-                                                : product.category === 'Llantas' ? product.price / 1.25
-                                                    : product.category === 'Rines' ? product.price / 1.30
-                                                        : product.category === 'Baterías' ? product.price / 1.20
+                                                : product.category === 'Llantas' ? product.price * 0.85
+                                                    : product.category === 'Rines' ? product.price * 0.70
+                                                        : product.category === 'Baterías' ? product.price * 0.80
                                                             : product.price
                                         )}
                                     </span>
